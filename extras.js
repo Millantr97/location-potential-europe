@@ -131,7 +131,7 @@ async function runInverse(){
   let seg=null,via=null;
   if(addr){
     try{
-      const resp=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=gb&q="+encodeURIComponent(addr));
+      const resp=await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes="+((window.CITY&&CITY.cc||"gb").toLowerCase())+"&q="+encodeURIComponent(addr));
       const js=await resp.json();
       if(js&&js.length){
         const la=+js[0].lat,lo=+js[0].lon;
