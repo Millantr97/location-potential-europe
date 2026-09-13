@@ -55,7 +55,19 @@ window.CITIES=[
  {id:"valencia",name:"Valencia",url:"valencia/"},
  {id:"vilnius",name:"Vilnius",url:"vilnius/"},
  {id:"zagreb",name:"Zagreb",url:"zagreb/"},
- {id:"zaragoza",name:"Zaragoza",url:"zaragoza/"}
+ {id:"zaragoza",name:"Zaragoza",url:"zaragoza/"},
+ {id:"wroclaw",name:"Wrocław",url:"wroclaw/"},
+ {id:"lodz",name:"Łódź",url:"lodz/"},
+ {id:"poznan",name:"Poznań",url:"poznan/"},
+ {id:"dortmund",name:"Dortmund",url:"dortmund/"},
+ {id:"essen",name:"Essen",url:"essen/"},
+ {id:"duisburg",name:"Duisburg",url:"duisburg/"},
+ {id:"bremen",name:"Bremen",url:"bremen/"},
+ {id:"dresden",name:"Dresden",url:"dresden/"},
+ {id:"nuremberg",name:"Nuremberg",url:"nuremberg/"},
+ {id:"hanover",name:"Hanover",url:"hanover/"},
+ {id:"palermo",name:"Palermo",url:"palermo/"},
+ {id:"genoa",name:"Genoa",url:"genoa/"}
 ];
 (function(){
  const base=window.LPE_BASE, path=location.pathname;
