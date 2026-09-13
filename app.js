@@ -988,7 +988,7 @@ selectSegment=function(id,scroll){
   head.parentNode.insertBefore(actions,head.nextSibling);
   $("dp-fav").onclick=()=>toggleFavourite(id);$("dp-compare").onclick=()=>toggleCompare(id);$("dp-report").onclick=()=>openSlideReport(id);
   if(r){
-    const vt=verdictText(r),shareTxt="The best location for my new business is: "+(CITY.site||"https://locationpotential.com/")+(CITY.id==="london"?"":CITY.id+"/")+"#expert";
+    const vt=verdictText(r),shareTxt="The best location for my new business is: "+(CITY.site||(location.origin+((window.LPE_BASE)||"/")))+(CITY.id==="london"?"":CITY.id+"/")+"#expert";
     const v=document.createElement("div");v.className="verdict-card";
     v.innerHTML=`<div class="vk">The verdict - ready to share</div><div class="vt">${vt}</div><div class="vbtns"><a class="vbtn" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(shareTxt)}">WhatsApp</a><a class="vbtn" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTxt)}">Post on X</a></div>`;
     actions.parentNode.insertBefore(v,actions.nextSibling);
