@@ -14,3 +14,4 @@
 - 17 Sep 11:31: rebuilt established qualifying Tallinn 226, Bratislava 290, Ljubljana 131 with full chains; pushed d05b136, f9f78ca, next commit.
 - 17 Sep 12:26: Luxembourg 154 pushed fe0b996, Valletta 130 pushed 1fd67c9, Kaunas 76 pushed 8e91f57. Finland extraction initially starved Espoo due overlapping Helsinki bbox; nearest-centre attribution restored, producing Espoo 61 (21 streets + 40 areas) and Tampere 121; full chains pushed b387b71. Thin Espoo retained honestly because total has 61 useful segments; do not inflate.
 - 17 Sep 12:28: Rennes 222 full chain pushed 40cf9ee.
+- 17 Sep 13:45: Rouen 159 full chain pushed 53e5c2d; Montpellier 252 full chain pushed 3e28c60.
