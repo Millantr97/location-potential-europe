@@ -1,80 +1,11 @@
-/* Location Potential Europe - live city sections. Regenerate: python3 work/make_cities_js.py */
+/* Location Potential Europe - searchable country-grouped city picker. */
 window.LPE_BASE=(function(){var m=location.pathname.match(/^(.*\/location-potential-europe\/)/);return m?m[1]:"/";})();
-window.CITIES=[
- {id:"hub",name:"All cities",url:""},
- {id:"uk-london",name:"London",url:"london/"},
- {id:"uk-manchester",name:"Manchester",url:"manchester/"},
- {id:"uk-birmingham",name:"Birmingham",url:"birmingham/"},
- {id:"uk-leeds",name:"Leeds",url:"leeds/"},
- {id:"uk-bristol",name:"Bristol",url:"bristol/"},
- {id:"uk-liverpool",name:"Liverpool",url:"liverpool/"},
- {id:"uk-sheffield",name:"Sheffield",url:"sheffield/"},
- {id:"uk-glasgow",name:"Glasgow",url:"glasgow/"},
- {id:"uk-edinburgh",name:"Edinburgh",url:"edinburgh/"},
- {id:"paris",name:"Paris",url:"paris/"},
- {id:"madrid",name:"Madrid",url:"madrid/"},
- {id:"barcelona",name:"Barcelona",url:"barcelona/"},
- {id:"berlin",name:"Berlin",url:"berlin/"},
- {id:"munich",name:"Munich",url:"munich/"},
- {id:"milan",name:"Milan",url:"milan/"},
- {id:"rome",name:"Rome",url:"rome/"},
- {id:"amsterdam",name:"Amsterdam",url:"amsterdam/"},
- {id:"vienna",name:"Vienna",url:"vienna/"},
- {id:"brussels",name:"Brussels",url:"brussels/"},
- {id:"hamburg",name:"Hamburg",url:"hamburg/"},
- {id:"prague",name:"Prague",url:"prague/"},
- {id:"warsaw",name:"Warsaw",url:"warsaw/"},
- {id:"lisbon",name:"Lisbon",url:"lisbon/"},
- {id:"stockholm",name:"Stockholm",url:"stockholm/"},
- {id:"copenhagen",name:"Copenhagen",url:"copenhagen/"},
- {id:"dublin",name:"Dublin",url:"dublin/"},
- {id:"antwerp",name:"Antwerp",url:"antwerp/"},
- {id:"athens",name:"Athens",url:"athens/"},
- {id:"bucharest",name:"Bucharest",url:"bucharest/"},
- {id:"budapest",name:"Budapest",url:"budapest/"},
- {id:"cologne",name:"Cologne",url:"cologne/"},
- {id:"dusseldorf",name:"Düsseldorf",url:"dusseldorf/"},
- {id:"frankfurt",name:"Frankfurt",url:"frankfurt/"},
- {id:"gothenburg",name:"Gothenburg",url:"gothenburg/"},
- {id:"helsinki",name:"Helsinki",url:"helsinki/"},
- {id:"krakow",name:"Kraków",url:"krakow/"},
- {id:"leipzig",name:"Leipzig",url:"leipzig/"},
- {id:"lyon",name:"Lyon",url:"lyon/"},
- {id:"malaga",name:"Málaga",url:"malaga/"},
- {id:"marseille",name:"Marseille",url:"marseille/"},
- {id:"naples",name:"Naples",url:"naples/"},
- {id:"oslo",name:"Oslo",url:"oslo/"},
- {id:"riga",name:"Riga",url:"riga/"},
- {id:"rotterdam",name:"Rotterdam",url:"rotterdam/"},
- {id:"seville",name:"Seville",url:"seville/"},
- {id:"sofia",name:"Sofia",url:"sofia/"},
- {id:"stuttgart",name:"Stuttgart",url:"stuttgart/"},
- {id:"the-hague",name:"The Hague",url:"the-hague/"},
- {id:"toulouse",name:"Toulouse",url:"toulouse/"},
- {id:"turin",name:"Turin",url:"turin/"},
- {id:"valencia",name:"Valencia",url:"valencia/"},
- {id:"vilnius",name:"Vilnius",url:"vilnius/"},
- {id:"zagreb",name:"Zagreb",url:"zagreb/"},
- {id:"zaragoza",name:"Zaragoza",url:"zaragoza/"},
- {id:"wroclaw",name:"Wrocław",url:"wroclaw/"},
- {id:"lodz",name:"Łódź",url:"lodz/"},
- {id:"poznan",name:"Poznań",url:"poznan/"},
- {id:"dortmund",name:"Dortmund",url:"dortmund/"},
- {id:"essen",name:"Essen",url:"essen/"},
- {id:"duisburg",name:"Duisburg",url:"duisburg/"},
- {id:"bremen",name:"Bremen",url:"bremen/"},
- {id:"dresden",name:"Dresden",url:"dresden/"},
- {id:"nuremberg",name:"Nuremberg",url:"nuremberg/"},
- {id:"hanover",name:"Hanover",url:"hanover/"},
- {id:"palermo",name:"Palermo",url:"palermo/"},
- {id:"genoa",name:"Genoa",url:"genoa/"}
-];
+window.CITIES=[{"id":"hub","name":"All cities","country":"Europe","url":""},{"id":"uk-london","name":"London","country":"United Kingdom","url":"london/"},{"id":"uk-manchester","name":"Manchester","country":"United Kingdom","url":"manchester/"},{"id":"uk-birmingham","name":"Birmingham","country":"United Kingdom","url":"birmingham/"},{"id":"uk-leeds","name":"Leeds","country":"United Kingdom","url":"leeds/"},{"id":"uk-bristol","name":"Bristol","country":"United Kingdom","url":"bristol/"},{"id":"uk-liverpool","name":"Liverpool","country":"United Kingdom","url":"liverpool/"},{"id":"uk-sheffield","name":"Sheffield","country":"United Kingdom","url":"sheffield/"},{"id":"uk-glasgow","name":"Glasgow","country":"United Kingdom","url":"glasgow/"},{"id":"uk-edinburgh","name":"Edinburgh","country":"United Kingdom","url":"edinburgh/"},{"id":"paris","name":"Paris","country":"France","url":"paris/"},{"id":"lyon","name":"Lyon","country":"France","url":"lyon/"},{"id":"marseille","name":"Marseille","country":"France","url":"marseille/"},{"id":"toulouse","name":"Toulouse","country":"France","url":"toulouse/"},{"id":"bordeaux","name":"Bordeaux","country":"France","url":"bordeaux/"},{"id":"lille","name":"Lille","country":"France","url":"lille/"},{"id":"nice","name":"Nice","country":"France","url":"nice/"},{"id":"nantes","name":"Nantes","country":"France","url":"nantes/"},{"id":"strasbourg","name":"Strasbourg","country":"France","url":"strasbourg/"},{"id":"madrid","name":"Madrid","country":"Spain","url":"madrid/"},{"id":"barcelona","name":"Barcelona","country":"Spain","url":"barcelona/"},{"id":"valencia","name":"Valencia","country":"Spain","url":"valencia/"},{"id":"seville","name":"Seville","country":"Spain","url":"seville/"},{"id":"bilbao","name":"Bilbao","country":"Spain","url":"bilbao/"},{"id":"malaga","name":"Málaga","country":"Spain","url":"malaga/"},{"id":"zaragoza","name":"Zaragoza","country":"Spain","url":"zaragoza/"},{"id":"berlin","name":"Berlin","country":"Germany","url":"berlin/"},{"id":"munich","name":"Munich","country":"Germany","url":"munich/"},{"id":"hamburg","name":"Hamburg","country":"Germany","url":"hamburg/"},{"id":"cologne","name":"Cologne","country":"Germany","url":"cologne/"},{"id":"frankfurt","name":"Frankfurt","country":"Germany","url":"frankfurt/"},{"id":"stuttgart","name":"Stuttgart","country":"Germany","url":"stuttgart/"},{"id":"dusseldorf","name":"Düsseldorf","country":"Germany","url":"dusseldorf/"},{"id":"leipzig","name":"Leipzig","country":"Germany","url":"leipzig/"},{"id":"rome","name":"Rome","country":"Italy","url":"rome/"},{"id":"milan","name":"Milan","country":"Italy","url":"milan/"},{"id":"naples","name":"Naples","country":"Italy","url":"naples/"},{"id":"turin","name":"Turin","country":"Italy","url":"turin/"},{"id":"florence","name":"Florence","country":"Italy","url":"florence/"},{"id":"bologna","name":"Bologna","country":"Italy","url":"bologna/"},{"id":"amsterdam","name":"Amsterdam","country":"The Netherlands","url":"amsterdam/"},{"id":"rotterdam","name":"Rotterdam","country":"The Netherlands","url":"rotterdam/"},{"id":"the-hague","name":"The Hague","country":"The Netherlands","url":"the-hague/"},{"id":"utrecht","name":"Utrecht","country":"The Netherlands","url":"utrecht/"},{"id":"brussels","name":"Brussels","country":"Belgium","url":"brussels/"},{"id":"antwerp","name":"Antwerp","country":"Belgium","url":"antwerp/"},{"id":"vienna","name":"Vienna","country":"Austria","url":"vienna/"},{"id":"zurich","name":"Zurich","country":"Switzerland","url":"zurich/"},{"id":"geneva","name":"Geneva","country":"Switzerland","url":"geneva/"},{"id":"prague","name":"Prague","country":"Czechia","url":"prague/"},{"id":"budapest","name":"Budapest","country":"Hungary","url":"budapest/"},{"id":"warsaw","name":"Warsaw","country":"Poland","url":"warsaw/"},{"id":"krakow","name":"Kraków","country":"Poland","url":"krakow/"},{"id":"lisbon","name":"Lisbon","country":"Portugal","url":"lisbon/"},{"id":"porto","name":"Porto","country":"Portugal","url":"porto/"},{"id":"stockholm","name":"Stockholm","country":"Sweden","url":"stockholm/"},{"id":"gothenburg","name":"Gothenburg","country":"Sweden","url":"gothenburg/"},{"id":"copenhagen","name":"Copenhagen","country":"Denmark","url":"copenhagen/"},{"id":"helsinki","name":"Helsinki","country":"Finland","url":"helsinki/"},{"id":"oslo","name":"Oslo","country":"Norway","url":"oslo/"},{"id":"athens","name":"Athens","country":"Greece","url":"athens/"},{"id":"bucharest","name":"Bucharest","country":"Romania","url":"bucharest/"},{"id":"zagreb","name":"Zagreb","country":"Croatia","url":"zagreb/"},{"id":"bratislava","name":"Bratislava","country":"Slovakia","url":"bratislava/"},{"id":"ljubljana","name":"Ljubljana","country":"Slovenia","url":"ljubljana/"},{"id":"sofia","name":"Sofia","country":"Bulgaria","url":"sofia/"},{"id":"dublin","name":"Dublin","country":"Ireland","url":"dublin/"},{"id":"tallinn","name":"Tallinn","country":"Estonia","url":"tallinn/"},{"id":"riga","name":"Riga","country":"Latvia","url":"riga/"},{"id":"vilnius","name":"Vilnius","country":"Lithuania","url":"vilnius/"},{"id":"luxembourg","name":"Luxembourg City","country":"Luxembourg","url":"luxembourg/"},{"id":"valletta","name":"Valletta","country":"Malta","url":"valletta/"},{"id":"liege","name":"Liège","country":"Belgium","url":"liege/"},{"id":"gent","name":"Gent","country":"Belgium","url":"gent/"},{"id":"plovdiv","name":"Plovdiv","country":"Bulgaria","url":"plovdiv/"},{"id":"varna","name":"Varna","country":"Bulgaria","url":"varna/"},{"id":"basel","name":"Basel","country":"Switzerland","url":"basel/"},{"id":"lausanne","name":"Lausanne","country":"Switzerland","url":"lausanne/"},{"id":"brno","name":"Brno","country":"Czechia","url":"brno/"},{"id":"ostrava","name":"Ostrava","country":"Czechia","url":"ostrava/"},{"id":"bochum","name":"Bochum","country":"Germany","url":"bochum/"},{"id":"wuppertal","name":"Wuppertal","country":"Germany","url":"wuppertal/"},{"id":"bielefeld","name":"Bielefeld","country":"Germany","url":"bielefeld/"},{"id":"bonn","name":"Bonn","country":"Germany","url":"bonn/"},{"id":"mannheim","name":"Mannheim","country":"Germany","url":"mannheim/"},{"id":"karlsruhe","name":"Karlsruhe","country":"Germany","url":"karlsruhe/"},{"id":"munster","name":"Münster","country":"Germany","url":"munster/"},{"id":"augsburg","name":"Augsburg","country":"Germany","url":"augsburg/"},{"id":"wiesbaden","name":"Wiesbaden","country":"Germany","url":"wiesbaden/"},{"id":"gelsenkirchen","name":"Gelsenkirchen","country":"Germany","url":"gelsenkirchen/"},{"id":"monchengladbach","name":"Mönchengladbach","country":"Germany","url":"monchengladbach/"},{"id":"aachen","name":"Aachen","country":"Germany","url":"aachen/"},{"id":"braunschweig","name":"Braunschweig","country":"Germany","url":"braunschweig/"},{"id":"kiel","name":"Kiel","country":"Germany","url":"kiel/"},{"id":"alicante","name":"Alicante","country":"Spain","url":"alicante/"},{"id":"palma-de-mallorca","name":"Palma de Mallorca","country":"Spain","url":"palma-de-mallorca/"},{"id":"sabadell","name":"Sabadell","country":"Spain","url":"sabadell/"},{"id":"las-palmas-de-gran-canaria","name":"Las Palmas de Gran Canaria","country":"Spain","url":"las-palmas-de-gran-canaria/"},{"id":"santa-cruz-de-tenerife","name":"Santa Cruz de Tenerife","country":"Spain","url":"santa-cruz-de-tenerife/"},{"id":"pamplona","name":"Pamplona","country":"Spain","url":"pamplona/"},{"id":"granada","name":"Granada","country":"Spain","url":"granada/"},{"id":"cordoba","name":"Córdoba","country":"Spain","url":"cordoba/"},{"id":"valladolid","name":"Valladolid","country":"Spain","url":"valladolid/"},{"id":"a-coruna","name":"A Coruña","country":"Spain","url":"a-coruna/"},{"id":"vigo","name":"Vigo","country":"Spain","url":"vigo/"},{"id":"gijon","name":"Gijón","country":"Spain","url":"gijon/"},{"id":"vitoria-gasteiz","name":"Vitoria-Gasteiz","country":"Spain","url":"vitoria-gasteiz/"},{"id":"san-sebastian","name":"San Sebastián","country":"Spain","url":"san-sebastian/"},{"id":"espoo","name":"Espoo","country":"Finland","url":"espoo/"},{"id":"tampere","name":"Tampere","country":"Finland","url":"tampere/"},{"id":"montpellier","name":"Montpellier","country":"France","url":"montpellier/"},{"id":"grenoble","name":"Grenoble","country":"France","url":"grenoble/"},{"id":"rouen","name":"Rouen","country":"France","url":"rouen/"},{"id":"rennes","name":"Rennes","country":"France","url":"rennes/"},{"id":"catania","name":"Catania","country":"Italy","url":"catania/"},{"id":"bari","name":"Bari","country":"Italy","url":"bari/"},{"id":"verona","name":"Verona","country":"Italy","url":"verona/"},{"id":"bergamo","name":"Bergamo","country":"Italy","url":"bergamo/"},{"id":"kaunas","name":"Kaunas","country":"Lithuania","url":"kaunas/"},{"id":"eindhoven","name":"Eindhoven","country":"Netherlands","url":"eindhoven/"},{"id":"haarlem","name":"Haarlem","country":"Netherlands","url":"haarlem/"},{"id":"leiden","name":"Leiden","country":"Netherlands","url":"leiden/"},{"id":"trondheim","name":"Trondheim","country":"Norway","url":"trondheim/"},{"id":"gdansk","name":"Gdańsk","country":"Poland","url":"gdansk/"},{"id":"szczecin","name":"Szczecin","country":"Poland","url":"szczecin/"},{"id":"lublin","name":"Lublin","country":"Poland","url":"lublin/"},{"id":"bydgoszcz","name":"Bydgoszcz","country":"Poland","url":"bydgoszcz/"},{"id":"bialystok","name":"Białystok","country":"Poland","url":"bialystok/"},{"id":"katowice","name":"Katowice","country":"Poland","url":"katowice/"},{"id":"sintra","name":"Sintra","country":"Portugal","url":"sintra/"},{"id":"iasi","name":"Iași","country":"Romania","url":"iasi/"},{"id":"timisoara","name":"Timișoara","country":"Romania","url":"timisoara/"},{"id":"cluj-napoca","name":"Cluj-Napoca","country":"Romania","url":"cluj-napoca/"},{"id":"constanta","name":"Constanța","country":"Romania","url":"constanta/"},{"id":"craiova","name":"Craiova","country":"Romania","url":"craiova/"},{"id":"brasov","name":"Brașov","country":"Romania","url":"brasov/"},{"id":"malmo","name":"Malmö","country":"Sweden","url":"malmo/"}];
 (function(){
- const base=window.LPE_BASE, path=location.pathname;
- const cur=(window.CITIES.find(c=>c.url&&path.indexOf(base+c.url)===0)||window.CITIES[0]).id;
- const nav=document.getElementById("citynav");
- if(nav){
-  nav.innerHTML='<span class="cn-label cn-full">Best area in the city of:</span><span class="cn-label cn-short">Area:</span>'+window.CITIES.map(c=>
-   `<a href="${base+c.url}"${c.id===cur?' class="on"':''}>${c.name}</a>`).join("");
- }
+ const base=window.LPE_BASE,path=location.pathname,nav=document.getElementById('citynav'); if(!nav)return;
+ const cur=(CITIES.find(c=>c.url&&path.indexOf(base+c.url)===0)||CITIES[0]);
+ nav.innerHTML=`<button class="citypick-btn" type="button" aria-expanded="false"><span>City</span><b>${cur.name}</b><i>⌄</i></button><div class="citypick-panel" hidden><label><span class="sr-only">Search cities</span><input class="citypick-search" type="search" placeholder="Search ${CITIES.length-1} cities or countries" autocomplete="off"></label><div class="citypick-groups"></div></div>`;
+ const btn=nav.querySelector('.citypick-btn'),panel=nav.querySelector('.citypick-panel'),inp=nav.querySelector('input'),box=nav.querySelector('.citypick-groups');
+ function render(q=''){q=q.trim().toLocaleLowerCase();let groups={};CITIES.forEach(c=>{if(c.id==='hub')return;if(q&&!(`${c.name} ${c.country}`.toLocaleLowerCase().includes(q)))return;(groups[c.country]??=[]).push(c)});box.innerHTML=`<a class="citypick-all" href="${base}">All cities</a>`+Object.keys(groups).sort().map(k=>`<section><h3>${k}</h3>${groups[k].sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<a href="${base+c.url}"${c.id===cur.id?' class="on"':''}>${c.name}</a>`).join('')}</section>`).join('')+(Object.keys(groups).length?'':'<p class="citypick-empty">No matching city</p>')}
+ function open(v){panel.hidden=!v;btn.setAttribute('aria-expanded',String(v));if(v){render(inp.value);setTimeout(()=>inp.focus(),0)}} btn.onclick=()=>open(panel.hidden);inp.oninput=()=>render(inp.value);document.addEventListener('click',e=>{if(!nav.contains(e.target))open(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape')open(false)});render();
 })();
