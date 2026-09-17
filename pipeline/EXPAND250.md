@@ -16,3 +16,4 @@
 - 17 Sep 12:28: Rennes 222 full chain pushed 40cf9ee.
 - 17 Sep 13:45: Rouen 159 full chain pushed 53e5c2d; Montpellier 252 full chain pushed 3e28c60.
 - 17 Sep 13:49: Grenoble 221 pushed c4ae4d5; Utrecht 331 pushed 426a75d; Bilbao 494, Vitoria-Gasteiz 80, and San Sebastián 237 pushed b4297ff.
+- 17 Sep 14:46: Haarlem 169 pushed e685e7e (canonical repaired at 0034e04); Eindhoven 186 pushed c30365a. Canonical guard passes 95/95. Norway whole-country parser exceeded bounded runtime twice before producing output; retain PBF and use bbox pre-extract or defer.
