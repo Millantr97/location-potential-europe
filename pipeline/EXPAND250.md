@@ -12,3 +12,4 @@
 - 17 Sep 11:24: Switzerland Basel 150 and Lausanne 302 full chains pushed e9d8663. Census aggregate fallback fixed to handle missing national fields without divide-by-zero, using modelled 0.48 employment only when absent and otherwise observed values.
 - 17 Sep 11:28: Czechia Brno 259 and Ostrava 111 full chains pushed 78a2298.
 - 17 Sep 11:31: rebuilt established qualifying Tallinn 226, Bratislava 290, Ljubljana 131 with full chains; pushed d05b136, f9f78ca, next commit.
+- 17 Sep 12:26: Luxembourg 154 pushed fe0b996, Valletta 130 pushed 1fd67c9, Kaunas 76 pushed 8e91f57. Finland extraction initially starved Espoo due overlapping Helsinki bbox; nearest-centre attribution restored, producing Espoo 61 (21 streets + 40 areas) and Tampere 121; full chains pushed b387b71. Thin Espoo retained honestly because total has 61 useful segments; do not inflate.
