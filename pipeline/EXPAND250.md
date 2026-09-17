@@ -6,3 +6,5 @@
 - Census 2021 grid re-downloaded and extracted: 180,592 retained city cells.
 - Every commit must push immediately. Preserve OBSERVED / AREA CONTEXT / MODELLED. Never touch UK repo/site.
 - Need merge seven live established configs omitted by oldest recovered config source: dortmund, essen, duisburg, dresden, bremen, hanover, palermo. Then build new candidates by Geofabrik batch. Exclude Murcia/Galati after thin depth check.
+- 17 Sep 10:58: auth saved. Pipeline/config/canonical targets pushed through 6bb0580. First city artifacts Liège 132 and Gent 184 with 23 articles pushed at 8b95be2; page metadata/currency assertion fix pushed at 0eb22ff. Pages not in selector yet pending full assembly.
+- Recovered build_eu_city appended sections, article generator, model fallback extension. Large PBF extraction fixed to sparse_file_array. Belgium PBF remains locally. Next region Bulgaria (Plovdiv/Varna), then push immediately.
