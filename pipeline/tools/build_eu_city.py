@@ -75,6 +75,27 @@ for e in pool:
         'cuisine':(t.get('cuisine','') or t.get('shop','')).split(';')[0],
         'terrace':1 if (t.get('outdoor_seating','')+t.get('seat:outside','')).lower()=='yes' else 0})
 print('units:',len(units_all),'culture:',len(culture),'parks:',len(parks),'stations:',len(stations),'malls:',len(malls),flush=True)
+# Fill missing addr:street from nearest named highway geometry point (OSM observed).
+SF=f'{P}/streets.json'
+if os.path.exists(SF):
+    ways=json.load(open(SF)); PG={}
+    for w in ways:
+        for pt in w['pts'][::2]: PG.setdefault((int(pt[0]/0.002),int(pt[1]/0.002)),[]).append((pt[0],pt[1],w['name']))
+    def street_at(la,lo):
+        best=None;bd=40.0;ci,cj=int(la/0.002),int(lo/0.002)
+        for dx in range(-1,2):
+            for dy in range(-1,2):
+                for x in PG.get((ci+dx,cj+dy),[]):
+                    d=hav(la,lo,x[0],x[1])
+                    if d<bd:bd=d;best=x[2]
+        return best
+    filled=0
+    for u in units_all:
+        if not u['street']:
+            nm=street_at(u['lat'],u['lng'])
+            if nm:u['street']=nm;filled+=1
+    print('street names filled from nearest way:',filled,flush=True)
+
 def gridify(lst,cell):
     g={}
     for x in lst: g.setdefault((round(x[0]/cell),round(x[1]/cell)),[]).append(x)
