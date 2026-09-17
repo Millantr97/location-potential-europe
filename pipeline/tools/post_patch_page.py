@@ -31,6 +31,7 @@ for cid in sys.argv[1:]:
     ccy = CCY.get(C['cur']) or {'SE':'SEK','DK':'DKK','NO':'NOK'}.get(C['country'],'EUR')
     p = pathlib.Path(f'/home/sandbox/europe/repo/{cid}/index.html')
     s = p.read_text()
+    s = s.replace('Street-level site selection · 9 UK cities · this page: London', f'Street-level site selection · {name}, {C["country_name"]}')
     s = s.replace('href="styles.css?v=32"','href="../styles.css?v=32"')
     s = s.replace('src="extras.js?v=21"','src="../extras.js?v=21"')
     s = s.replace('href="assets/favicon.svg"','href="../assets/favicon.svg"')
