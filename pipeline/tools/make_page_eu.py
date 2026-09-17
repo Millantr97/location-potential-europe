@@ -55,7 +55,7 @@ s=s.replace('<title>London Location Potential - Street-level revenue and site se
             f'<title>{C["name"]} Location Potential - Street-level revenue and site selection for {C["name"]}</title>')
 s=s.replace('<meta name="description" content="Compare London street segments and individual commercial units for your exact business concept: real station flows, competition, residents, crime, rents and estimated monthly revenue.">',
             f'<meta name="description" content="Compare {C["name"]} street segments and individual commercial units for your exact business concept: modelled station flows, competition, residents, rents and estimated monthly revenue.">')
-s=s.replace('<link rel="canonical" href="https://locationpotential.com/">',f'<link rel="canonical" href="{SITE}{cid}/">')
+s=re.sub(r'<link rel="canonical" href="[^"]*">',f'<link rel="canonical" href="{SITE}{cid}/">',s,count=1)
 s=s.replace('<meta property="og:title" content="Location Potential - London: where should your business open?">',
             f'<meta property="og:title" content="Location Potential - {C["name"]}: where should your business open?">')
 s=s.replace('<meta property="og:url" content="https://locationpotential.com/">',f'<meta property="og:url" content="{SITE}{cid}/">')
@@ -82,4 +82,6 @@ s=s.replace('<script src="tabs.js?v=22"></script>','<script src="../tabs.js?v=22
 s=s.replace('<script src="leads.js?v=20"></script>','<script src="../leads.js?v=20"></script>')
 s=s.replace('href="styles.css?v=23"','href="../styles.css?v=23"')
 open(f'{ROOT}/{cid}/index.html','w',encoding='utf-8').write(s)
+expected_canonical=f'<link rel="canonical" href="{SITE}{cid}/">'
+assert s.count(expected_canonical)==1, f'{cid}: homepage canonical is not uniquely self-referencing'
 print(cid,'page written:',nseg,'segments (',narea,'areas +',nstreet,'streets )')
