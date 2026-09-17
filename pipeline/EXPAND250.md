@@ -18,3 +18,4 @@
 - 17 Sep 13:49: Grenoble 221 pushed c4ae4d5; Utrecht 331 pushed 426a75d; Bilbao 494, Vitoria-Gasteiz 80, and San Sebastián 237 pushed b4297ff.
 - 17 Sep 14:46: Haarlem 169 pushed e685e7e (canonical repaired at 0034e04); Eindhoven 186 pushed c30365a. Canonical guard passes 95/95. Norway whole-country parser exceeded bounded runtime twice before producing output; retain PBF and use bbox pre-extract or defer.
 - 17 Sep 14:52: Sintra 147 full chain pushed cc764b5; canonical guard passes 96/96.
+- 17 Sep 16:28: A Coruña 235 and Vigo 108 pushed c540164; Gijón 134 pushed 27b4ff2; Valladolid 119 pushed next commit. Canonical guard passes all generated pages.
