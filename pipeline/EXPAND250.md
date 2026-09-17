@@ -10,3 +10,4 @@
 - Recovered build_eu_city appended sections, article generator, model fallback extension. Large PBF extraction fixed to sparse_file_array. Belgium PBF remains locally. Next region Bulgaria (Plovdiv/Varna), then push immediately.
 - 17 Sep 11:21: recovered nearest observed named-street fallback missing from first restored builder. Rebuilt Plovdiv 103/66 streets and Varna 97/81; pushed at fa077ab. Need rebuild Liège/Gent with fallback later (prior expected 196/290 vs current 132/184).
 - 17 Sep 11:24: Switzerland Basel 150 and Lausanne 302 full chains pushed e9d8663. Census aggregate fallback fixed to handle missing national fields without divide-by-zero, using modelled 0.48 employment only when absent and otherwise observed values.
+- 17 Sep 11:28: Czechia Brno 259 and Ostrava 111 full chains pushed 78a2298.
