@@ -144,8 +144,9 @@ def osm_counts(us):
 cells=json.load(open(f'/home/sandbox/europe/work/census/{cid}.json'))
 CELL_G={}
 for c in cells: CELL_G.setdefault((round(c[0]/0.01),round(c[1]/0.01)),[]).append(c)
-valid=[c for c in cells if c[2]>0 and all(v>=0 for v in c[2:10])]
-CT=[sum(c[i] for c in valid) for i in range(2,10)]
+valid=[c for c in cells if c[2]>0]
+CT=[sum(c[i] for c in valid if c[i]>=0) for i in range(2,10)]
+EMP_CITY=(CT[5]/CT[0]) if CT[0]>0 and CT[5]>0 else 0.48
 def cell_demo(la,lo):
     best=None; bd=1e9
     ci,cj=round(la/0.01),round(lo/0.01)
@@ -161,8 +162,8 @@ def demo_at(la,lo):
     T=c[2]
     if T<=0: return None,d
     if any(v<0 for v in c[2:10]):
-        p=dict(residents=T,pct15=100*CT[2]/CT[0],pct1564=100*CT[3]/CT[0],emp=100*CT[5]/CT[0],
-               nat=CT[6]/CT[0],eu=CT[7]/CT[0],oth=CT[8]/CT[0])
+        p=dict(residents=T,pct15=100*CT[1]/CT[0],pct1564=100*CT[2]/CT[0],emp=100*EMP_CITY,
+               nat=CT[5]/CT[0],eu=CT[6]/CT[0],oth=CT[7]/CT[0])
     else:
         p=dict(residents=T,pct15=100*c[3]/T,pct1564=100*c[4]/T,emp=100*c[6]/T,
                nat=c[7]/T,eu=c[8]/T,oth=c[9]/T)
