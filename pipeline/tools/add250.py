@@ -14,7 +14,7 @@ existing={key(v['name']):cid for cid,v in CITIES_EU.items()}
 import os
 for cid in os.listdir('repo'):
  if os.path.isfile(f'repo/{cid}/index.html'): existing.setdefault(key(cid.replace('-', ' ')),cid)
-existing.update({'dortmund':'dortmund','essen':'essen','duisburg':'duisburg','dresden':'dresden','bremen':'bremen','hannover':'hanover','palermo':'palermo','genova':'genoa','wroclaw':'wroclaw','wrocaw':'wroclaw','lodz':'lodz','poznan':'poznan','nurnberg':'nuremberg'})
+existing.update({'dortmund':'dortmund','essen':'essen','duisburg':'duisburg','dresden':'dresden','bremen':'bremen','hannover':'hanover','palermo':'palermo','genova':'genoa','wroclaw':'wroclaw','wrocaw':'wroclaw','lodz':'lodz','odz':'lodz','poznan':'poznan','nurnberg':'nuremberg'})
 DISPLAY={'Palmas de Gran Canaria, Las':'Las Palmas de Gran Canaria','Pamplona/Iruña':'Pamplona','Alicante/Alacant':'Alicante','San Sebastián/Donostia':'San Sebastián','Frankfurt am Main':'Frankfurt','Espoo/Esbo':'Espoo','Tampere/Tammerfors':'Tampere','Greater Valletta':'Valletta','Warszawa':'Warsaw'}
 COUNTRY={'BE':('Belgium','€'),'BG':('Bulgaria','лв'),'CH':('Switzerland','CHF '),'CZ':('Czechia','Kč'),'DE':('Germany','€'),'EE':('Estonia','€'),'ES':('Spain','€'),'FI':('Finland','€'),'FR':('France','€'),'HR':('Croatia','€'),'IT':('Italy','€'),'LV':('Latvia','€'),'LT':('Lithuania','€'),'HU':('Hungary','Ft'),'MT':('Malta','€'),'NL':('Netherlands','€'),'NO':('Norway','kr'),'PL':('Poland','zł'),'PT':('Portugal','€'),'RO':('Romania','lei'),'SI':('Slovenia','€'),'SK':('Slovakia','€'),'SE':('Sweden','kr')}
 # explicit smallest Geofabrik region from known point mapping. Canary is Africa path special.
