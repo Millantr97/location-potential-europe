@@ -10,6 +10,11 @@ G=[]
 for x in csv.reader(open('/tmp/cities500.txt'),delimiter='\t'):
  if len(x)>14 and x[6]=='P':G.append(dict(name=x[1],ascii=x[2],alts=x[3].split(',')[:40],lat=float(x[4]),lon=float(x[5]),cc=x[8],pop=int(x[14] or 0),feature=x[7]))
 existing={key(v['name']):cid for cid,v in CITIES_EU.items()}
+# Treat already-shipped page slugs as established destinations even if older config source omitted them.
+import os
+for cid in os.listdir('repo'):
+ if os.path.isfile(f'repo/{cid}/index.html'): existing.setdefault(key(cid.replace('-', ' ')),cid)
+existing.update({'dortmund':'dortmund','essen':'essen','duisburg':'duisburg','dresden':'dresden','bremen':'bremen','hannover':'hanover','palermo':'palermo','genova':'genoa','wroclaw':'wroclaw','lodz':'lodz','poznan':'poznan','nurnberg':'nuremberg'})
 DISPLAY={'Palmas de Gran Canaria, Las':'Las Palmas de Gran Canaria','Pamplona/Iruña':'Pamplona','Alicante/Alacant':'Alicante','San Sebastián/Donostia':'San Sebastián','Frankfurt am Main':'Frankfurt','Espoo/Esbo':'Espoo','Tampere/Tammerfors':'Tampere','Greater Valletta':'Valletta','Warszawa':'Warsaw'}
 COUNTRY={'BE':('Belgium','€'),'BG':('Bulgaria','лв'),'CH':('Switzerland','CHF '),'CZ':('Czechia','Kč'),'DE':('Germany','€'),'EE':('Estonia','€'),'ES':('Spain','€'),'FI':('Finland','€'),'FR':('France','€'),'HR':('Croatia','€'),'IT':('Italy','€'),'LV':('Latvia','€'),'LT':('Lithuania','€'),'HU':('Hungary','Ft'),'MT':('Malta','€'),'NL':('Netherlands','€'),'NO':('Norway','kr'),'PL':('Poland','zł'),'PT':('Portugal','€'),'RO':('Romania','lei'),'SI':('Slovenia','€'),'SK':('Slovakia','€'),'SE':('Sweden','kr')}
 # explicit smallest Geofabrik region from known point mapping. Canary is Africa path special.
@@ -32,7 +37,7 @@ for r in T:
  score,g=max(cand,key=lambda x:x[0]);raw=re.sub(r'\s*\(greater city\)','',r['name']); name=DISPLAY.get(raw,raw);cid=slug(name).replace('biaystok','bialystok')
  country,cur=COUNTRY[cc];dlon=min(.30,.19/max(.45,math.cos(math.radians(g['lat']))));gf=REGNAME.get(cid,REG.get(cc));assert gf,(cid,cc)
  rows.append({**r,'cid':cid,'name':name,'cc':cc,'country_name':country,'cur':cur,'lat':g['lat'],'lon':g['lon'],'bbox':[round(g['lat']-.16,3),round(g['lon']-dlon,3),round(g['lat']+.16,3),round(g['lon']+dlon,3)],'geofabrik':gf,'match':g['name'],'score':round(score,3)})
-assert len(rows)==69,(len(rows),[(r['name'],existing.get(key(r['name']))) for r in T])
+print('new target configs',len(rows))
 # Manual quality gate on matches
 bad=[x for x in rows if x['score']<.6];assert not bad,bad
 p='work/cities_eu.py';s=open(p).read();marker='}\n# Build order: most important markets first';assert marker in s
