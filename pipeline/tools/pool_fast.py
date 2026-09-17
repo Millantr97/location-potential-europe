@@ -16,7 +16,7 @@ def city_of(la,lo):
     return None
 out={cid:[] for cid,_ in CITY_OF}
 fp=osmium.FileProcessor(PBF, osmium.osm.osm_entity_bits.NODE | osmium.osm.osm_entity_bits.WAY)
-fp.with_locations('flex_mem')
+fp.with_locations('sparse_file_array,/tmp/pool_locations.dat')
 fp.with_filter(osmium.filter.KeyFilter('amenity','shop','leisure','tourism','office','railway','station'))
 n=0
 for o in fp:

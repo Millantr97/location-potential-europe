@@ -7,7 +7,7 @@ PBF=f'/home/sandbox/europe/dl/pbf/{region}.osm.pbf'
 CITY_OF=[(cid,c) for cid,c in CITIES_EU.items() if c['geofabrik'].replace('/','_')==region]
 assert CITY_OF, region
 out={cid:[] for cid,_ in CITY_OF}
-fp=osmium.FileProcessor(PBF, osmium.osm.osm_entity_bits.WAY)
+fp=osmium.FileProcessor(PBF)
 fp.with_locations('sparse_file_array,/home/sandbox/europe/dl/locidx_hw.dat')
 fp.with_filter(osmium.filter.KeyFilter('highway'))
 n=0
