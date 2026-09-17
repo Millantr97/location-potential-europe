@@ -20,3 +20,4 @@
 - 17 Sep 14:52: Sintra 147 full chain pushed cc764b5; canonical guard passes 96/96.
 - 17 Sep 16:28: A Coruña 235 and Vigo 108 pushed c540164; Gijón 134 pushed 27b4ff2; Valladolid 119 pushed next commit. Canonical guard passes all generated pages.
 - 17 Sep 18:18: Granada 168 and Córdoba 50 pushed 043b06e; Alicante 133 pushed 9296d1a; Sabadell 192 pushed 0297f6d; Palma de Mallorca 167 pushed b5e783a; Las Palmas 183 and Santa Cruz de Tenerife 92 pushed c86bb7f. Canonical guard passes 108/108.
+- 17 Sep 19:19: Verona 143 full chain pushed 59fecf7. Italy Nord-Est pool parse completed within first bounded call; street pass resumed separately. NRW 871 MB whole-region pool exceeded bounded call before output; retain PBF for narrower extraction.
