@@ -22,11 +22,10 @@ for o in fp:
     except Exception: continue
     if len(pts)<2: continue
     la=sum(p[0] for p in pts)/len(pts); lo=sum(p[1] for p in pts)/len(pts)
-    for cid,c in CITY_OF:
-        b=c['bbox']
-        if b[0]<=la<=b[2] and b[1]<=lo<=b[3]:
-            out[cid].append({'name':name,'hw':hw,'pts':pts})
-            break
+    hits=[(cid,c) for cid,c in CITY_OF if c['bbox'][0]<=la<=c['bbox'][2] and c['bbox'][1]<=lo<=c['bbox'][3]]
+    if hits:
+        cid,_=min(hits,key=lambda x:(la-x[1]['center'][0])**2+(lo-x[1]['center'][1])**2)
+        out[cid].append({'name':name,'hw':hw,'pts':pts})
 print('ways seen:',n,flush=True)
 for cid,_ in CITY_OF:
     d=f'/home/sandbox/europe/repo/pipeline/eu/{cid}'

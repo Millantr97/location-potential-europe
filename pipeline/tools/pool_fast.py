@@ -10,10 +10,9 @@ PBF=f'/home/sandbox/europe/dl/pbf/{region}.osm.pbf'
 CITY_OF=[(cid,c) for cid,c in CITIES_EU.items() if c['geofabrik'].replace('/','_')==region]
 assert CITY_OF, region
 def city_of(la,lo):
-    for cid,c in CITY_OF:
-        b=c['bbox']
-        if b[0]<=la<=b[2] and b[1]<=lo<=b[3]: return cid
-    return None
+    hits=[(cid,c) for cid,c in CITY_OF if c['bbox'][0]<=la<=c['bbox'][2] and c['bbox'][1]<=lo<=c['bbox'][3]]
+    if not hits:return None
+    return min(hits,key=lambda x:(la-x[1]['center'][0])**2+(lo-x[1]['center'][1])**2)[0]
 out={cid:[] for cid,_ in CITY_OF}
 fp=osmium.FileProcessor(PBF, osmium.osm.osm_entity_bits.NODE | osmium.osm.osm_entity_bits.WAY)
 fp.with_locations('sparse_file_array,/tmp/pool_locations.dat')
