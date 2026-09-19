@@ -16,7 +16,7 @@ function inScope(c){return scope.all||scope.regions.has(c.region)||scope.countri
 function scopeList(){return ALL.filter(inScope);}
 function scopeLabel(){
   if(scope.all)return "all Europe";
-  const parts=[...scope.regions.map(r=>r+" Europe"),...scope.countries,...scope.cities.map(id=>{const c=ALL.find(x=>x.id===id);return c?c.name:id;})];
+  const parts=[...[...scope.regions].map(r=>r+" Europe"),...scope.countries,...[...scope.cities].map(id=>{const c=ALL.find(x=>x.id===id);return c?c.name:id;})];
   return parts.join(" + ")||"all Europe";
 }
 const eurFmt=n=>"€"+Math.round(n).toLocaleString("en-GB");
