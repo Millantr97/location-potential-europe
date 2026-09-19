@@ -34,20 +34,21 @@ def seg_count(d):
 # kept out so the published city set stays exactly as shipped (136 destinations).
 LEGACY_UNLISTED = {"bremen","dortmund","dresden","duisburg","essen","genoa","hanover","lodz","nuremberg","palermo","poznan","wroclaw"}
 PICKER_JS = r"""
-/* Shared schematic Europe map: dots positioned from pre-projected x/y. Honest caption: schematic, not geographic borders. */
+/* Shared geographic Europe map: Natural Earth land paths with city dots positioned on the same projection. */
 window.lpeMapSVG=function(selId,curId){
   const RCOL={Southern:"#c0563f",Western:"#2c6e59",Northern:"#3a5a8c",Eastern:"#8a6d3b"};
+  const land=(window.LPE_LAND||[]).map(d=>'<path class="land" d="'+d+'"/>').join("");
   const dots=window.CITIES.slice(1).map(c=>{
     const r=Math.max(4,Math.min(13,3+Math.sqrt(c.n)/4.2));
     const cls="mapdot"+(selId&&!(selId.has?selId.has(c.id):selId===c.id)?" dim":"")+(curId===c.id?" cur":"");
     return '<a href="'+window.LPE_BASE+c.url+'" class="mapdotlink" aria-label="'+c.name+', '+c.country+' - '+c.n+' scored segments"><circle class="'+cls+'" cx="'+c.x+'" cy="'+c.y+'" r="'+r+'" fill="'+RCOL[c.region]+'"><title>'+c.name+', '+c.country+' - '+c.n+' segments</title></circle></a>';
   }).join("");
-  return '<svg class="eumap" viewBox="95 274 730 830" role="img" aria-label="Schematic map of Europe with one dot per city">'+dots+'</svg>';
+  return '<svg class="eumap geo" viewBox="95 274 730 830" role="img" aria-label="Geographic map of Europe with one dot per city">'+land+dots+'</svg>';
 };
 (function(){
  const base=window.LPE_BASE,path=location.pathname,nav=document.getElementById('citynav'); if(!nav)return;
  const cur=(CITIES.find(c=>c.url&&path.indexOf(base+c.url)===0)||CITIES[0]);
- nav.innerHTML=`<button class="citypick-btn" type="button" aria-expanded="false"><span>City</span><b>${cur.name}</b><i>&#8964;</i></button><div class="citypick-panel" hidden><div class="citypick-map">${lpeMapSVG(null,cur.id)}<div class="mapkey">Schematic map - a dot per city, sized by scored segments, coloured by region. Tap a dot to open the city.</div></div><label><span class="sr-only">Search cities</span><input class="citypick-search" type="search" placeholder="Search ${CITIES.length-1} cities or countries" autocomplete="off" aria-controls="citypick-results"></label><div class="citypick-status sr-only" aria-live="polite"></div><div class="citypick-groups" id="citypick-results"></div></div>`;
+ nav.innerHTML=`<button class="citypick-btn" type="button" aria-expanded="false"><span>City</span><b>${cur.name}</b><i>&#8964;</i></button><div class="citypick-panel" hidden><div class="citypick-map">${lpeMapSVG(null,cur.id)}<div class="mapkey">Natural Earth geography - a dot per city, sized by scored segments, coloured by region. Tap a dot to open the city.</div></div><label><span class="sr-only">Search cities</span><input class="citypick-search" type="search" placeholder="Search ${CITIES.length-1} cities or countries" autocomplete="off" aria-controls="citypick-results"></label><div class="citypick-status sr-only" aria-live="polite"></div><div class="citypick-groups" id="citypick-results"></div></div>`;
  const btn=nav.querySelector('.citypick-btn'),panel=nav.querySelector('.citypick-panel'),inp=nav.querySelector('input'),box=nav.querySelector('.citypick-groups'),status=nav.querySelector('.citypick-status');
  const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
  function render(q=''){q=norm(q.trim());let groups={},matches=0;CITIES.forEach(c=>{if(c.id==='hub')return;if(q&&!norm(`${c.name} ${c.country}`).includes(q))return;matches++;(groups[c.country]??=[]).push(c)});box.innerHTML=`<a class="citypick-all" href="${base}">All cities</a>`+Object.keys(groups).sort().map(k=>`<section><h3>${k}</h3>${groups[k].sort((a,b)=>a.name.localeCompare(b.name)).map(c=>`<a href="${base+c.url}"${c.id===cur.id?' class="on"':''}>${c.name}</a>`).join('')}</section>`).join('')+(Object.keys(groups).length?'':'<p class="citypick-empty">No matching city</p>');status.textContent=matches+' matching '+(matches===1?'city':'cities')}

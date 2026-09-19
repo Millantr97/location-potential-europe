@@ -11,7 +11,7 @@ const COUNTRIES=[...new Set(ALL.map(c=>c.country))].sort();
 const FEATURED=['uk-london','madrid','paris','rome','berlin','barcelona','vienna','amsterdam','lisbon'];
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
 const scope={regions:new Set(),countries:new Set(),cities:new Set(),all:true};
-let conceptId=null,zonesCache={},drawMode=false,drawPoly=null,lasso=null;
+let conceptId=null,zonesCache={},drawMode=false,drawPoly=null,lasso=null,suppressUrl=false;
 
 /* concept picker mirrors the city pages: 9 most compact presets up front, the rest behind "See more concepts" */
 const CONCEPTS=window.COMPARE_CONCEPTS;
@@ -121,12 +121,40 @@ function renderResults(){
   if(!zones.length){out.innerHTML='<div class="hub-note">No zones in this scope.</div>';return;}
   const ranked=zones.slice().sort((a,b)=>b.e-a.e).slice(0,20),meta=id=>ALL.find(c=>c.url===id+'/');
   out.innerHTML=`<h3>Best zones for “${p.name}” across ${scopeLabel()}</h3><div class="hub-note">Ranked by modelled monthly revenue converted to EUR at ECB reference rates (${window.FX_DATE}) for comparability only - local currency is shown too and stays canonical. Every figure MODELLED; open the city page for the full input breakdown. Fit score is computed within each city.</div><div class="cmp-list" role="list">${ranked.map((z,i)=>{const c=meta(z.c);return `<a role="listitem" class="cmp-row" href="${window.LPE_BASE}${z.c}/?concept=${conceptId}"><span class="cmp-rank">${i+1}</span><span class="cmp-main"><b>${z.n}</b><span class="cmp-city">${c.name}, ${c.country} · fit ${z.s}/100</span></span><span class="cmp-rev"><b>${eurFmt(z.e)}/mo</b><span class="cmp-local">${c.cur}${z.r.toLocaleString("en-GB")} local · range ${c.cur}${z.lo.toLocaleString("en-GB")}-${c.cur}${z.hi.toLocaleString("en-GB")}</span></span></a>`;}).join('')}</div>`;
+  const actions=document.getElementById('result-actions');actions.hidden=false;actions.dataset.rows=JSON.stringify(ranked);actions.dataset.concept=p.name;syncUrl();
 }
-function renderAll(){renderScope();renderMap();renderConcepts();if(conceptId&&zonesCache[conceptId])renderResults();}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function openScopeReport(){
+  const p=CONCEPTS.find(x=>x.id===conceptId),rows=JSON.parse(document.getElementById('result-actions').dataset.rows||"[]"),meta=id=>ALL.find(c=>c.url===id+'/');
+  const w=window.open("","_blank");if(!w)return;
+  const body=rows.map((z,i)=>{const c=meta(z.c);return `<tr><td>${i+1}</td><td><b>${esc(z.n)}</b><small>${esc(c.name)}, ${esc(c.country)}</small></td><td>${z.s}/100</td><td><b>${eurFmt(z.e)}/mo</b><small>${esc(c.cur)}${z.r.toLocaleString("en-GB")} local</small></td></tr>`}).join("");
+  w.document.write(`<!doctype html><html><head><title>Location Potential - ${esc(p.name)} - ${esc(scopeLabel())}</title><style>@page{size:A4;margin:12mm}*{box-sizing:border-box}body{font:12px Arial;color:#16382c;margin:0}header{border-bottom:4px solid #b8e95b;padding-bottom:10px;margin-bottom:12px}h1{font-size:25px;margin:4px 0}.brand{font-size:16px;font-weight:800}.brand span{color:#598c16}.meta{color:#5d6b65}table{width:100%;border-collapse:collapse}td{padding:6px;border-bottom:1px solid #d9ddd7}td:first-child{width:24px;color:#777}td:nth-child(3),td:nth-child(4){text-align:right}small{display:block;color:#66736d;margin-top:2px}footer{margin-top:12px;padding-top:8px;border-top:1px solid #ccc;font-size:9px;color:#66736d}.labels{background:#f1f5ee;padding:8px;border-radius:6px;margin:8px 0}.obs{color:#15734b}.mod{color:#9b5b00}@media print{button{display:none}}</style></head><body><header><div class="brand">Location <span>Potential</span> Europe</div><h1>Top 20 zones for ${esc(p.name)}</h1><div class="meta">Scope: ${esc(scopeLabel())} · generated ${new Date().toLocaleDateString("en-GB")}</div></header><div class="labels"><b class="mod">MODELLED</b> revenue and fit for comparison. Open each city result for the full <b class="obs">OBSERVED</b> and AREA CONTEXT evidence.</div><table>${body}</table><footer>Decision-support report, not a valuation. Revenue uses local-currency models converted at ECB reference rates (${esc(window.FX_DATE)}). Verify shortlists with on-street counts, agent enquiries and licensing checks. Data updated 17 September 2026.</footer><script>setTimeout(()=>print(),250)<\/script></body></html>`);w.document.close();
+}
+
+function compactPoly(pts){if(!pts||!pts.length)return "";const step=Math.max(1,Math.ceil(pts.length/35));return pts.filter((_,i)=>i%step===0||i===pts.length-1).map(p=>Math.round(p.x)+"."+Math.round(p.y)).join("_");}
+function stateUrl(){
+  const u=new URL(location.href);u.search="";
+  if(!scope.all)u.searchParams.set("cities",scopeList().map(c=>c.id).join(","));
+  if(drawPoly)u.searchParams.set("area",compactPoly(drawPoly));
+  if(conceptId)u.searchParams.set("concept",conceptId);
+  return u.toString();
+}
+function syncUrl(){if(!suppressUrl)history.replaceState(null,"",stateUrl());}
+function hydrateUrl(){
+  const q=new URLSearchParams(location.search),ids=(q.get("cities")||"").split(",").filter(id=>ALL.some(c=>c.id===id));
+  if(ids.length){scope.all=false;scope.cities=new Set(ids);}
+  const poly=(q.get("area")||"").split("_").map(v=>v.split(".").map(Number)).filter(v=>v.length===2&&v.every(Number.isFinite)).map(([x,y])=>({x,y}));
+  if(poly.length>=3)drawPoly=poly;
+  const ci=q.get("concept");if(ci&&CONCEPTS.some(c=>c.id===ci))conceptId=ci;
+}
+function renderAll(){renderScope();renderMap();renderConcepts();if(conceptId&&zonesCache[conceptId])renderResults();syncUrl();}
 const otherToggle=document.getElementById('other-cities-toggle'),otherPanel=document.getElementById('other-cities-panel');
 otherToggle.onclick=()=>{const open=otherPanel.hidden;otherPanel.hidden=!open;otherToggle.setAttribute('aria-expanded',open);otherToggle.textContent=open?'Hide other cities':'Select other cities';if(open)setTimeout(()=>document.getElementById('scope-city-search').focus(),0);};
 document.getElementById('scope-city-search').oninput=e=>renderCitySearch(e.target.value);
 document.getElementById('draw-area').onclick=()=>{drawMode=!drawMode;renderMap();};
 document.getElementById('clear-area').onclick=()=>{drawPoly=null;scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();renderAll();};
+document.getElementById('share-results').onclick=async()=>{const u=stateUrl();try{await navigator.clipboard.writeText(u);document.getElementById('share-status').textContent='Link copied';}catch(e){prompt('Copy this result link',u);}};
+document.getElementById('pdf-results').onclick=openScopeReport;
+suppressUrl=true;hydrateUrl();suppressUrl=false;
 renderScope();renderMap();renderConcepts();loadResults();
 })();

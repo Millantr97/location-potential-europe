@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#16382c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Location Potential">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">
+<title>Location Potential - London: dónde abrir tu negocio</title>
+<meta name="description" content="Compara calles y zonas de London para encontrar la mejor ubicación para tu negocio, con datos observados, contexto de área y estimaciones claramente etiquetadas.">
+<link rel="canonical" href="https://millantr97.github.io/location-potential-europe/alicante/es/">
+<link rel="alternate" hreflang="en" href="https://millantr97.github.io/location-potential-europe/alicante/">
+<link rel="alternate" hreflang="es" href="https://millantr97.github.io/location-potential-europe/alicante/es/">
+<link rel="alternate" hreflang="x-default" href="https://millantr97.github.io/location-potential-europe/alicante/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Location Potential">
+<meta property="og:title" content="Location Potential - Alicante: where should your business open?">
+<meta property="og:description" content="Selección de ubicaciones a nivel de calle in Alicante: station flows, recorded competition, residents, rents and modelled monthly revenue, honestly labelled.">
+<meta property="og:url" content="https://millantr97.github.io/location-potential-europe/london/">
+<meta property="og:image" content="https://millantr97.github.io/location-potential-europe/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Location Potential","url":"https://millantr97.github.io/location-potential-europe/","description":"Selección de ubicaciones a nivel de calle and modelled revenue for new business locations in Alicante, honestly labelled."}</script>
+<link rel="preconnect" href="https://unpkg.com">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../styles.css?v=37">
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <div class="brand">Location <span>Potential</span><i class="brand-city">London</i><span class="lang-switch"><a href="../">EN</a><b>ES</b></span></div>
+    <nav class="citynav" id="citynav" aria-label="Cities"></nav>
+    <nav class="tabs" id="tabbar" aria-label="Sections">
+      <a href="#concept" data-tab="concept" class="on">Concepto</a>
+      <a href="#detail" data-tab="detail">Calle</a>
+      <a href="#trends" data-tab="trends">Tendencias</a>
+      <a href="#opportunity" data-tab="opportunity">Oportunidad</a>
+      <a href="#method" data-tab="method">Método</a>
+      <a href="#rankings" data-tab="rankings">Rankings</a>
+      <a href="#expert" data-tab="expert" class="expert-tab">Ayuda experta</a>
+    </nav>
+  </div>
+</header>
+
+<main id="panels"><div class="es-note"><b>Versión en español.</b> Los datos, las puntuaciones y las etiquetas OBSERVED / AREA CONTEXT / MODELLED son los mismos que en la versión inglesa.</div>
+<section class="hero tab-panel on" data-panel="concept">
+  <div>
+    <div class="eyebrow">Selección de ubicaciones a nivel de calle · Alicante, Spain</div>
+    <h1>¿Dónde debería abrir tu negocio?</h1>
+    <p>Responde primero al cuestionario: ticket medio, formato, horario y público. El mapa y el top 20 se actualizan en tiempo real mientras respondes, evaluando <span id="seg-count">133</span> Alicante segmentos de calle (puedes cambiar de ciudad arriba) y cada local comercial registrado para tu concepto, con una estimación de ingresos mensuales para cada uno. Cada cifra está etiquetada como observada en esa calle, contexto de área o modelada.</p>
+    <a class="hero-cta" href="#concept" id="hero-cta">Empieza por tu concepto ↓</a>
+    <aside class="truth"><strong>Lee las etiquetas, no solo la puntuación</strong><p><b class="c-obs">OBSERVED</b> medido en la calle o estación. <b class="c-ctx">AREA CONTEXT</b> residentes o estadísticas del área cercana. <b class="c-mod">MODELLED</b> estimaciones transparentes que calculamos con la regla visible. Para modelos más precisos, consulta a un especialista.</p></aside>
+  </div>
+  
+</section>
+
+<section class="concept-wrap tab-panel on" data-panel="concept" id="concept">
+  <div class="section-head">
+    <div class="eyebrow">Paso 1 · Empieza aquí</div>
+    <h2>Define tu concepto</h2>
+    <p>Elige uno de los <span id="preset-count">68</span> conceptos o empieza desde cero y cambia lo que necesites. El mapa y el top 20 se actualizan con cada respuesta.</p>
+  </div>
+  <div class="preset-row" id="preset-row"></div>
+  <div class="concept-grid" id="concept-grid"></div>
+</section>
+
+<section class="map-first tab-panel on" data-panel="concept" id="map">
+  <div class="section-head">
+    <div class="eyebrow">Paso 2</div>
+    <h2>El mapa responde</h2>
+    <p>Every answer in the Concepto tab repaints the map.</p>
+  </div>
+  <div class="mapbox"><div id="leaflet-map"></div>
+    <div id="map-controls"></div>
+    <div class="map-note" id="map-note">Los marcadores son segmentos de calle. El color muestra el ajuste o los ingresos estimados para tu concepto. Pulsa uno para ver toda la evidencia. Acércate por encima del nivel 15 para ver cada local comercial.</div>
+  </div>
+</section>
+
+<section class="rankings-wrap tab-panel on" data-panel="concept" id="top20">
+  <div class="section-head">
+    <div class="eyebrow">Paso 3</div>
+    <h2>Las 20 mejores calles para tu concepto</h2>
+    <p id="ranking-sub">Los 20 segmentos (zonas y calles) con mejor ajuste para el concepto actual. El mapa muestra solo estos 20.</p>
+  </div>
+  <div class="rank-list" id="rank-list"></div>
+  <div class="cta-wrap"><div class="model-cta"><b>¿Estás planificando una inversión real?</b><span>Son estimaciones basadas en un modelo sencillo y datos públicos. Para mejores datos, un informe más profundo y apoyo de geomarketing, cuéntanos tu proyecto.</span><a href="#expert" data-expert>Speak to a specialist →</a></div></div>
+</section>
+
+<section class="detail-wrap tab-panel" data-panel="detail" id="detail">
+  <div class="detail-empty" id="detail-empty">
+    <div class="de-title">Todavía no has abierto ninguna calle</div>
+    <p>Select a segment on the map or in the top-20 table to open its full evidence panel: demand at your hours, named competitors, rent context, crime, revenue range and the slide report.</p>
+    <div class="de-btns"><button class="action primary" data-goto="map">Open the map</button><button class="action" data-goto="top20">See the top 20</button></div>
+  </div>
+  <div class="detail-panel" id="detail-panel" hidden></div>
+  <div class="workspace-block">
+    <div class="section-head">
+      <div class="eyebrow">Tu espacio de trabajo · guardado en este dispositivo</div>
+      <h2>Guarda, compara y sigue los cambios</h2>
+      <p>Guarda calles como favoritas, compara hasta tres y consulta los cambios en los datos publicados desde tu última visita. Todo permanece en este dispositivo.</p>
+    </div>
+    <div class="tool-grid">
+      <div class="tool-card"><h3>Favourites <span id="fav-count" class="count-badge">0</span></h3><div id="fav-list" class="saved-list"></div></div>
+      <div class="tool-card"><h3>Compare streets <span id="compare-count" class="count-badge">0/3</span></h3><div id="compare-list" class="saved-list"></div><button id="open-compare" class="action primary" disabled>Compare side by side</button></div>
+      <div class="tool-card"><h3>Change alerts</h3><p class="tool-copy">Favourites are checked against the latest published dataset whenever you return. If a competitor count, flow anchor or modelled score changes, you will see exactly what changed here.</p><div id="alert-list" class="saved-list"></div><p class="micro">ON-VISIT CHECK · A server is required for email or push alerts while this page is closed.</p></div>
+    </div>
+    <div id="compare-panel" class="compare-panel" hidden></div>
+  </div>
+</section>
+
+
+<section class="tools-wrap tab-panel" data-panel="method" id="method">
+  <div class="section-head method-head">
+    <div class="eyebrow">Fuentes y transparencia</div>
+    <h2>Método, fuentes y límites</h2>
+    <p>Ten clear evidence notes, arranged for easy side-by-side reading.</p>
+  </div>
+  <div class="method-grid" id="method-grid"></div>
+  <div class="cta-wrap"><div class="model-cta"><b>This method is consistent and scalable.</b><span>It may not be the best for you. If you are considering a serious investment, speak to a specialist.</span><a href="#expert" data-expert>Speak to a specialist →</a></div></div>
+</section>
+
+
+
+<section class="tools-wrap tab-panel" data-panel="trends" id="trends">
+  <div class="section-head feature-head trend-feature-head">
+    <div class="feature-number">01</div><div>
+    <div class="eyebrow">Concepto trends</div>
+    <h2>Is your concept rising or fading?</h2>
+    <p>Every concept, led by what people actually search for (Google Tendencias, ES, 2021-2026), with the venues recorded today as supply context (OpenCalleMap). Sort by rising interest to spot the risers, or search for a concept.</p></div>
+  </div>
+  <div class="trend-controls">
+    <div class="tc-searchwrap"><input id="trend-search" type="search" placeholder="Search a concept - e.g. matcha, ramen, Pilates..." aria-label="Search concepts"></div>
+    <label>Sort: <select id="trend-sort"><option value="growth">Fastest rising search interest</option><option value="az">A-Z</option></select></label>
+  </div>
+  <div id="trend-list" class="trend-grid"></div>
+  <div class="trend-pages" id="trend-pages"></div>
+  <div class="trend-note">Honest labels: the search series is Google Tendencias interest for a matching keyword (Spain, yearly mean), an ESTIMATED index of attention - not shops or sales. The supply figure counts every venue currently recorded in the concept's category in OpenCalleMap - OBSERVED, a snapshot of today. We deliberately show no venue history: mapped coverage grew several-fold over 2017-2026, faster than any real market, so year-by-year venue counts would measure mapping progress, not openings - and no open source publishes concept-level shop counts per year at this granularity.</div>
+  <div class="cta-wrap"><div class="model-cta"><b>¿Estás planificando una inversión real?</b><span>Son estimaciones basadas en un modelo sencillo y datos públicos. Para mejores datos, un informe más profundo y apoyo de geomarketing, cuéntanos tu proyecto.</span><a href="#expert" data-expert>Speak to a specialist →</a></div></div>
+</section>
+
+<section class="tools-wrap tab-panel" data-panel="opportunity" id="opportunity">
+  <div class="section-head feature-head premium-feature-head">
+    <div class="feature-number">🚀</div><div>
+    <div class="eyebrow">Oportunidad tools</div>
+    <h2>The decision toolkit</h2>
+    <p>Three tools that turn the map into a decision.</p>
+    <div class="model-cta"><b>¿Estás planificando una inversión real?</b><span>Son estimaciones basadas en un modelo sencillo y datos públicos. Para mejores datos, un informe más profundo y apoyo de geomarketing, cuéntanos tu proyecto.</span><a href="#expert" data-expert>Speak to a specialist →</a></div></div>
+  </div>
+  <div class="premium-grid">
+    <div class="tool-card prem-card gap-tool"><div class="tool-kicker"><span>01</span> Oportunidad finder</div><h3>What's missing here?</h3>
+      <p class="tool-copy">Choose a street to uncover concepts with strong demand at the right hours and little recorded competition.</p>
+      <label class="prem-field"><span>Calle or area</span><select id="gap-seg" class="prem-select"></select></label>
+      <button id="gap-run" class="action primary tool-run">Find underserved concepts <span>→</span></button>
+      <div class="tool-promise"><b>You will get</b><span>8 ranked concepts with demand, local supply and an opportunity score.</span></div>
+      <div id="gap-results" class="prem-results"></div>
+    </div>
+    <div class="tool-card prem-card premises-tool"><div class="tool-kicker"><span>02</span> Premises-first analysis</div><h3>I already have premises</h3>
+      <p class="tool-copy">Start with the site you have. Add its address, size and rent to rank the concepts that fit it best.</p>
+      <label class="prem-field"><span>Address</span><input id="inv-addr" class="prem-input" placeholder="e.g. 114 Curtain Road, London"></label>
+      <div class="prem-2col"><label class="prem-field"><span>Size</span><div class="input-unit"><input id="inv-size" class="prem-input" type="number" value="70" min="10" step="5"><i>m²</i></div></label><label class="prem-field"><span>Annual rent</span><div class="input-unit"><input id="inv-rent" class="prem-input" type="number" value="600" min="50" step="10"><i>€/m²</i></div></label></div>
+      <label class="prem-field prem-fallback"><span>Fallback street if the address cannot be found</span><select id="inv-seg" class="prem-select"></select></label>
+      <button id="inv-run" class="action primary tool-run">Rank the best concepts <span>→</span></button>
+      <div class="tool-promise"><b>You will get</b><span>10 concepts ranked by fit, modelled revenue and strongest reason.</span></div>
+      <div id="inv-results" class="prem-results"></div>
+    </div>
+    <div class="tool-card prem-card stress-tool"><div class="tool-kicker"><span>03</span> Downside planner</div><h3>Stress-test the plan</h3>
+      <p class="tool-copy">See how your current concept holds up if footfall falls 20%, a strong competitor opens nearby, or both happen together.</p>
+      <label class="prem-field"><span>Calle to test</span><select id="stress-seg" class="prem-select"></select></label>
+      <button id="stress-run" class="action primary tool-run">Run downside scenarios <span>→</span></button>
+      <div class="tool-promise"><b>You will get</b><span>Base case and three downside scenarios with revenue impact.</span></div>
+      <div id="stress-results" class="prem-results"></div>
+    </div>
+  </div>
+</section>
+
+<section class="tools-wrap tab-panel" data-panel="rankings" id="rankings">
+  <div class="section-head feature-head">
+    <div style="grid-column:1/-1">
+    <div class="eyebrow">Rankings &amp; guides</div>
+    <h2>Alicante, ranked by the model</h2>
+    <p>Data-driven rankings built with the same engine as the map: real station flows, recorded competition, Census context and transparent modelled revenue. Every figure keeps its honesty label.</p></div>
+  </div>
+  <div class="article-grid" id="article-grid"></div>
+  <p style="color:var(--muted);font-size:13px;margin:4px 0 14px">Ciudad-specific rankings for Alicante are being prepared - <a href="../../#rankings">the hub rankings</a> show the format.</p>
+  <div class="trend-note">Each ranking is one fixed concept run through the published model over 133 Alicante street segments. Scores and revenues are MODELLED planning estimates; station flows and venue counts are OBSERVED at named sources; residents and rents are AREA CONTEXT. Use a ranking to shortlist, then walk the street.</div>
+</section>
+
+
+<section class="expert-wrap tab-panel" data-panel="expert" id="expert">
+  <div class="expert-shell">
+    <div class="expert-intro">
+      <div class="eyebrow">Ve más allá del modelo público</div>
+      <h2>Trabaja con un especialista en geomarketing</h2>
+      <p>Location Potential is a fast first screen built from public data and a simple, transparent model. For a higher-stakes investment, tell us what you are planning and we will match your brief with a specialist geomarketing agency: ad-hoc analysis built around your exact question, an expert alongside you through shortlisting, negotiation and signing, and support that continues after you open.</p>
+      <div class="expert-points"><span>Better commercial datasets</span><span>Ad-hoc analysis for your exact brief</span><span>Deeper investment report</span><span>Hands-on site selection</span><span>Expert accompaniment through negotiation and signing</span><span>Ongoing specialist support after you open</span><span>Advanced geomarketing</span></div>
+    </div>
+    <form class="lead-form" id="lead-form" action="https://formsubmit.co/amazonmillan9@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Qualified Location Potential geomarketing lead">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="source" value="Location Potential London expert brief">
+      <div class="form-head"><span class="form-step">Your brief</span><b>Usually 2 minutes</b></div>
+      <label>Nombre completo<input required autocomplete="name" name="name" placeholder="Your name"></label>
+      <div class="form-two"><label>Email<input required type="email" autocomplete="email" name="email" placeholder="you@company.com"></label><label>Phone<input required type="tel" autocomplete="tel" name="phone" placeholder="+44..."></label></div>
+      <label>Conceptoo de negocio<input required name="concept" placeholder="e.g. premium Pilates studio"></label>
+      <label>Zonas de interés<textarea required name="areas" rows="3" placeholder="Neighbourhoods, streets or boroughs you are considering"></textarea></label>
+      <div class="form-two"><label>Presupuesto de inversión<select required name="investment_budget"><option value="">Elige un rango</option><option>Under €60,000</option><option>€60,000-€120,000</option><option>€120,000-€300,000</option><option>€300,000-€600,000</option><option>€600,000+</option><option>Prefer not to say yet</option></select></label><label>Plazo<select required name="timeline"><option value="">Elige un plazo</option><option>Listo ahora</option><option>En 3 meses</option><option>3-6 months</option><option>6-12 months</option><option>Investigación inicial</option></select></label></div>
+      <label class="consent-row"><input required type="checkbox" name="partner_consent" value="yes"><span>I agree that Location Potential may use my details to assess this brief and share them with suitable geomarketing agencies so they can contact me.</span></label>
+      <label class="consent-row optional"><input type="checkbox" name="updates_opt_in" value="yes"><span>Send me occasional Location Potential product and market updates. Optional.</span></label>
+      <button class="action primary lead-submit" type="submit">Solicitar especialista →</button>
+      <p class="form-legal">By submitting, you confirm you have read the <a href="../../privacy.html">Aviso de privacidad</a>. Your details are handled by our form provider and sent to Location Potential by email.</p>
+      <div class="form-status" id="lead-status" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+
+</main>
+
+<div class="freshness city-freshness">Data updated <span data-built>from the published dataset</span> · interface updated 19 September 2026</div>
+<footer class="foot">
+  <div>Location Potential · London · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and a licensing check before signing anything. A specialist can help you.</div><div class="foot-links"><a href="#rankings" data-goto="rankings">Rankings &amp; guides</a><a href="#expert" data-expert>Expert geomarketing</a><a href="../../privacy.html">Aviso de privacidad</a></div>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../../assets/europe-land.js?v=1"></script>
+<script src="../../cities.js?v=10"></script>
+<script src="../data/segments.js?v=13"></script>
+<script src="../data/units.js?v=13"></script>
+<script src="../data/competitors.js?v=13"></script>
+<script src="../../app.js?v=34"></script>
+<script src="../../report.js?v=21"></script>
+<script src="../data/trends.js?v=18"></script>
+<script src="../../extras.js?v=21"></script>
+<script src="../../tabs.js?v=22"></script>
+<script src="../../leads.js?v=20"></script>
+<script src="../../pwa.js?v=1"></script>
+<script src="../../es-ui.js?v=1"></script>
+</body>
+</html>
