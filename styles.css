@@ -467,6 +467,8 @@ main.art{max-width:880px;margin:0 auto;padding:34px 20px 50px}
 .city-hit span{color:var(--muted);font-size:11px}
 .scope-map{margin:10px 0}
 .eumap{width:100%;max-width:560px;height:auto;background:#f4f1ea;border:1px solid var(--line);border-radius:12px;display:block}
+.eumap.geo{background:#e9eff3}
+.eumap .land{fill:#fdfcf7;stroke:#d8d2c0;stroke-width:1;pointer-events:none}
 .mapdot{stroke:#fff;stroke-width:1.2}
 .mapdot.dim{opacity:.18}
 .mapdot.cur{stroke:#111;stroke-width:2.5}

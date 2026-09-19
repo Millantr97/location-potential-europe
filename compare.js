@@ -1,6 +1,7 @@
 /* Location Potential Europe - scope-first cross-city comparison.
    Start with broad regions or featured cities; search all cities only on demand.
-   The schematic map also supports drawing a rectangular area to select cities. */
+   The map is real geography (Natural Earth land outline) with city dots on top,
+   and supports free-form area drawing (lasso) to select cities. */
 (function(){
 const root=document.getElementById('compare-app'); if(!root)return;
 const ALL=window.CITIES.slice(1);
@@ -10,7 +11,13 @@ const COUNTRIES=[...new Set(ALL.map(c=>c.country))].sort();
 const FEATURED=['uk-london','madrid','paris','rome','berlin','barcelona','vienna','amsterdam','lisbon'];
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
 const scope={regions:new Set(),countries:new Set(),cities:new Set(),all:true};
-let conceptId=null,zonesCache={},drawMode=false,drawStart=null,drawRect=null;
+let conceptId=null,zonesCache={},drawMode=false,drawPoly=null,lasso=null;
+
+/* concept picker mirrors the city pages: 9 most compact presets up front, the rest behind "See more concepts" */
+const CONCEPTS=window.COMPARE_CONCEPTS;
+const CATLABEL={cafe:"Café & coffee",restaurant:"Restaurants",pub_bar:"Pubs & bars",fast_food:"Fast food",grocery:"Grocery & food retail",fitness:"Fitness & gyms",cowork:"Workspace",services:"Services",agents:"Estate agents",pharmacy:"Pharmacy",vets:"Vets"};
+const PRESETS_VISIBLE=9;
+let conceptsExpanded=false,conceptFilter="all";
 
 function inScope(c){return scope.all||scope.regions.has(c.region)||scope.countries.has(c.country)||scope.cities.has(c.id);}
 function scopeList(){return ALL.filter(inScope);}
@@ -28,7 +35,7 @@ function renderScope(){
   box.innerHTML=`<button class="chip-scope ${scope.all?'on':''}" data-all="1" aria-pressed="${scope.all}">All Europe (${ALL.length} cities)</button>`
     +REGIONS.map(r=>`<button class="chip-scope ${scope.regions.has(r)?'on':''}" data-region="${r}" aria-pressed="${scope.regions.has(r)}" style="--rc:${RCOL[r]}">${r} Europe</button>`).join('');
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
-    if(b.dataset.all){scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();drawRect=null;}
+    if(b.dataset.all){scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();drawPoly=null;}
     else{scope.all=false;scope.regions.has(b.dataset.region)?scope.regions.delete(b.dataset.region):scope.regions.add(b.dataset.region);ensureScope();}
     renderAll();
   });
@@ -49,32 +56,57 @@ function renderCitySearch(q){
   res.innerHTML=hits.map(c=>`<button class="city-hit ${scope.cities.has(c.id)?'on':''}" data-add="${c.id}">${c.name} <span>${c.country}</span></button>`).join('')||'<div class="hub-note">No matching city</div>';
   res.querySelectorAll('button').forEach(b=>b.onclick=()=>{toggleCity(b.dataset.add);document.getElementById('scope-city-search').value='';renderCitySearch('');});
 }
+function polyPath(pts,close){return 'M'+pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join('L')+(close?'Z':'');}
 function renderMap(){
   const sel=new Set(scopeList().map(c=>c.id));
+  const land=(window.LPE_LAND||[]).map(d=>`<path class="land" d="${d}"/>`).join('');
   const dots=ALL.map(c=>{const r=Math.max(5,Math.min(14,4+Math.sqrt(c.n)/4.2)),dim=!sel.has(c.id);return `<g class="area-city" role="button" tabindex="0" data-city="${c.id}" aria-label="${c.name}, ${c.country}${dim?' - not selected':' - selected'}" aria-pressed="${!dim}"><circle class="mapdot${dim?' dim':''}" cx="${c.x}" cy="${c.y}" r="${r}" fill="${RCOL[c.region]}"><title>${c.name}, ${c.country} - ${c.n} segments</title></circle></g>`;}).join('');
-  const rect=drawRect?`<rect class="area-selection" x="${drawRect.x}" y="${drawRect.y}" width="${drawRect.w}" height="${drawRect.h}"/>`:'';
-  document.getElementById('scope-map').innerHTML=`<svg class="eumap area-map${drawMode?' drawing':''}" viewBox="95 274 730 830" role="img" aria-label="Schematic map of Europe. Select city dots or use Draw an area.">${dots}${rect}<rect class="area-drag" x="0" y="0" width="0" height="0" hidden/></svg><div class="mapkey">Schematic map - dot position approximate, size = scored segments, colour = macro-region. ${scope.all?'All cities in scope.':sel.size+' cities in scope.'}</div>`;
+  const area=drawPoly?`<path class="area-selection" d="${polyPath(drawPoly,true)}"/>`:'';
+  document.getElementById('scope-map').innerHTML=`<svg class="eumap area-map geo${drawMode?' drawing':''}" viewBox="95 274 730 830" role="img" aria-label="Map of Europe. Select city dots or draw a free-form area.">${land}${dots}${area}<path class="area-drag" hidden/></svg><div class="mapkey">Real map outline (Natural Earth, public domain) - dot size = scored segments, colour = macro-region. ${scope.all?'All cities in scope.':sel.size+' cities in scope.'}</div>`;
   bindMap();
   document.getElementById('draw-area').classList.toggle('on',drawMode);
   document.getElementById('draw-area').setAttribute('aria-pressed',drawMode);
-  document.getElementById('draw-area').textContent=drawMode?'Drawing: drag on map':'Draw an area';
-  document.getElementById('clear-area').hidden=!drawRect;
+  document.getElementById('draw-area').textContent=drawMode?'Drawing: draw any shape':'Draw an area';
+  document.getElementById('clear-area').hidden=!drawPoly;
 }
 function pointInSvg(svg,e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+function insidePoly(c,pts){
+  let inside=false;
+  for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+    const xi=pts[i].x,yi=pts[i].y,xj=pts[j].x,yj=pts[j].y;
+    if((yi>c.y)!==(yj>c.y)&&c.x<(xj-xi)*(c.y-yi)/(yj-yi)+xi)inside=!inside;
+  }
+  return inside;
+}
 function bindMap(){
   const svg=document.querySelector('#scope-map svg');
   svg.querySelectorAll('.area-city').forEach(g=>{g.onclick=e=>{if(drawMode)return;e.preventDefault();toggleCity(g.dataset.city);};g.onkeydown=e=>{if(!drawMode&&(e.key==='Enter'||e.key===' ')){e.preventDefault();toggleCity(g.dataset.city);}};});
   if(!drawMode)return;
   const live=svg.querySelector('.area-drag');
-  svg.onpointerdown=e=>{drawStart=pointInSvg(svg,e);svg.setPointerCapture(e.pointerId);live.hidden=false;live.setAttribute('x',drawStart.x);live.setAttribute('y',drawStart.y);live.setAttribute('width',0);live.setAttribute('height',0);};
-  svg.onpointermove=e=>{if(!drawStart)return;const p=pointInSvg(svg,e),x=Math.min(drawStart.x,p.x),y=Math.min(drawStart.y,p.y),w=Math.abs(p.x-drawStart.x),h=Math.abs(p.y-drawStart.y);live.setAttribute('x',x);live.setAttribute('y',y);live.setAttribute('width',w);live.setAttribute('height',h);};
-  svg.onpointerup=e=>{if(!drawStart)return;const p=pointInSvg(svg,e),r={x:Math.min(drawStart.x,p.x),y:Math.min(drawStart.y,p.y),w:Math.abs(p.x-drawStart.x),h:Math.abs(p.y-drawStart.y)};drawStart=null;if(r.w<12||r.h<12)return;drawRect=r;scope.all=false;scope.regions.clear();scope.countries.clear();scope.cities=new Set(ALL.filter(c=>c.x>=r.x&&c.x<=r.x+r.w&&c.y>=r.y&&c.y<=r.y+r.h).map(c=>c.id));ensureScope();drawMode=false;renderAll();};
+  svg.onpointerdown=e=>{lasso=[pointInSvg(svg,e)];svg.setPointerCapture(e.pointerId);live.hidden=false;live.setAttribute('d',polyPath(lasso,false));};
+  svg.onpointermove=e=>{if(!lasso)return;const p=pointInSvg(svg,e),last=lasso[lasso.length-1];if(Math.hypot(p.x-last.x,p.y-last.y)>=3){lasso.push(p);live.setAttribute('d',polyPath(lasso,false));}};
+  svg.onpointerup=e=>{
+    if(!lasso)return;const pts=lasso;lasso=null;
+    const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),bw=Math.max(...xs)-Math.min(...xs),bh=Math.max(...ys)-Math.min(...ys);
+    if(pts.length<8||bw<12||bh<12){live.hidden=true;return;} /* accidental tap: stay in draw mode */
+    drawPoly=pts;scope.all=false;scope.regions.clear();scope.countries.clear();scope.cities=new Set(ALL.filter(c=>insidePoly(c,pts)).map(c=>c.id));ensureScope();drawMode=false;renderAll();
+  };
 }
-function renderConcepts(q){
+function renderConcepts(){
   const box=document.getElementById('concept-chips');
-  const list=window.COMPARE_CONCEPTS.filter(p=>!q||norm(p.name).includes(norm(q)));
-  box.innerHTML=list.map(p=>`<button class="chip-scope concept ${p.id===conceptId?'on':''}" data-c="${p.id}" aria-pressed="${p.id===conceptId}">${p.name}</button>`).join('');
-  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{conceptId=b.dataset.c;renderAll();loadResults();});
+  const pool=conceptFilter==="all"?CONCEPTS:CONCEPTS.filter(p=>p.cat===conceptFilter);
+  let visible=conceptsExpanded?pool.slice():[...CONCEPTS].sort((a,b)=>a.name.length-b.name.length||a.name.localeCompare(b.name)).slice(0,PRESETS_VISIBLE); /* default set: shortest names so the chips stay compact */
+  if(conceptId&&!visible.some(p=>p.id===conceptId)){const sel=CONCEPTS.find(p=>p.id===conceptId);if(sel)visible.push(sel);} /* keep the active concept on screen */
+  const filterRow=conceptsExpanded
+    ? `<div class="preset-filters"><span class="pf-label">Filter by category:</span><button class="preset filter ${conceptFilter==="all"?"active":""}" data-f="all">All</button>`
+      +Object.keys(CATLABEL).filter(c=>CONCEPTS.some(p=>p.cat===c)).map(c=>`<button class="preset filter ${conceptFilter===c?"active":""}" data-f="${c}">${CATLABEL[c]}</button>`).join("")+`</div>`:"";
+  const moreBtn=`<button class="preset more" data-p="__more">${conceptsExpanded?'See fewer concepts':'See more concepts ('+(CONCEPTS.length-PRESETS_VISIBLE)+' more)'}</button>`;
+  box.innerHTML=(conceptsExpanded?moreBtn:"")+filterRow+visible.map(p=>`<button class="preset ${p.id===conceptId?'active':''}" data-c="${p.id}" aria-pressed="${p.id===conceptId}">${p.name}</button>`).join('')+(conceptsExpanded?"":moreBtn); /* expanded list: collapse control first, not buried at the bottom */
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    if(b.dataset.f){conceptFilter=b.dataset.f;renderConcepts();return;}
+    if(b.dataset.p==='__more'){conceptsExpanded=!conceptsExpanded;if(!conceptsExpanded)conceptFilter="all";renderConcepts();return;}
+    conceptId=b.dataset.c;renderAll();loadResults();
+  });
 }
 function loadResults(){
   const out=document.getElementById('compare-results');
@@ -90,12 +122,11 @@ function renderResults(){
   const ranked=zones.slice().sort((a,b)=>b.e-a.e).slice(0,20),meta=id=>ALL.find(c=>c.url===id+'/');
   out.innerHTML=`<h3>Best zones for “${p.name}” across ${scopeLabel()}</h3><div class="hub-note">Ranked by modelled monthly revenue converted to EUR at ECB reference rates (${window.FX_DATE}) for comparability only - local currency is shown too and stays canonical. Every figure MODELLED; open the city page for the full input breakdown. Fit score is computed within each city.</div><div class="cmp-list" role="list">${ranked.map((z,i)=>{const c=meta(z.c);return `<a role="listitem" class="cmp-row" href="${window.LPE_BASE}${z.c}/?concept=${conceptId}"><span class="cmp-rank">${i+1}</span><span class="cmp-main"><b>${z.n}</b><span class="cmp-city">${c.name}, ${c.country} · fit ${z.s}/100</span></span><span class="cmp-rev"><b>${eurFmt(z.e)}/mo</b><span class="cmp-local">${c.cur}${z.r.toLocaleString("en-GB")} local · range ${c.cur}${z.lo.toLocaleString("en-GB")}-${c.cur}${z.hi.toLocaleString("en-GB")}</span></span></a>`;}).join('')}</div>`;
 }
-function renderAll(){renderScope();renderMap();renderConcepts(document.getElementById('concept-search').value);if(conceptId&&zonesCache[conceptId])renderResults();}
+function renderAll(){renderScope();renderMap();renderConcepts();if(conceptId&&zonesCache[conceptId])renderResults();}
 const otherToggle=document.getElementById('other-cities-toggle'),otherPanel=document.getElementById('other-cities-panel');
 otherToggle.onclick=()=>{const open=otherPanel.hidden;otherPanel.hidden=!open;otherToggle.setAttribute('aria-expanded',open);otherToggle.textContent=open?'Hide other cities':'Select other cities';if(open)setTimeout(()=>document.getElementById('scope-city-search').focus(),0);};
 document.getElementById('scope-city-search').oninput=e=>renderCitySearch(e.target.value);
-document.getElementById('concept-search').oninput=e=>renderConcepts(e.target.value);
 document.getElementById('draw-area').onclick=()=>{drawMode=!drawMode;renderMap();};
-document.getElementById('clear-area').onclick=()=>{drawRect=null;scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();renderAll();};
-renderScope();renderMap();renderConcepts('');loadResults();
+document.getElementById('clear-area').onclick=()=>{drawPoly=null;scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();renderAll();};
+renderScope();renderMap();renderConcepts();loadResults();
 })();
