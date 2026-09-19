@@ -4,6 +4,7 @@
    and supports free-form area drawing (lasso) to select cities. */
 (function(){
 const root=document.getElementById('compare-app'); if(!root)return;
+if(new URLSearchParams(location.search).get('embed')==='1')document.body.classList.add('embed-mode');
 const ALL=window.CITIES.slice(1);
 const REGIONS=["Southern","Western","Northern","Eastern"];
 const RCOL={Southern:"#c0563f",Western:"#2c6e59",Northern:"#3a5a8c",Eastern:"#8a6d3b"};

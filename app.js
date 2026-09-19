@@ -627,7 +627,7 @@ function renderWindows(){
 }
 
 /* ---------- map ---------- */
-let map,markers={},mapMetric="fit",revScale=v=>0.5,unitsLayer=null,unitsOn=false,unitsAuto=false,streetLayer=null,streetsOn=false,streetsAuto=false;
+let map,markers={},mapMetric="fit",revScale=v=>0.5,unitsLayer=null,unitsOn=false,unitsAuto=false,streetLayer=null,streetsOn=false,streetsAuto=false,heatLayer=null,heatOn=false,competitorLayer=null,competitorsOn=false;
 function scoreColor(v){const hue=v*1.2;return `hsl(${hue},70%,72%)`;}
 function revColor(v){return `hsl(${205-v*150},72%,${68-v*22}%)`;} // low: light blue, high: deep red
 function initMap(){
@@ -675,6 +675,7 @@ function paintMarkers(ranked){
     }
   });
   if(unitsOn){clearTimeout(window._uT);window._rk=ranked;window._uT=setTimeout(()=>paintUnits(window._rk),450);}
+  paintHeatmap(ranked);paintCompetitors();
 }
 
 /* every real commercial unit, coloured by estimated monthly revenue for the active concept */
@@ -727,6 +728,25 @@ function paintUnits(ranked){
     unitsLayer.addLayer(m);
   });
   unitsLayer.addTo(map);
+}
+
+
+/* Full-city score surface: every published segment, rendered on Canvas so even the largest cities stay responsive.
+   Each cell is a scored street/area anchor because the open source data does not contain defensible street polygons. */
+function paintHeatmap(ranked){
+  if(heatLayer){map.removeLayer(heatLayer);heatLayer=null;}
+  if(!heatOn)return;
+  const renderer=L.canvas({padding:.5}),by={};ranked.forEach(r=>by[r.seg.id]=r.score);
+  heatLayer=L.layerGroup();
+  SEGS.forEach(s=>{const v=by[s.id]||0,r=s.lvl==="street"?6:10;const c=L.circleMarker([s.lat,s.lng],{renderer,radius:r,stroke:false,fillColor:scoreColor(v/100),fillOpacity:s.lvl==="street"?.5:.34});c.bindTooltip(`${s.name}<br>Fit ${Math.round(v)}/100 <span class="chip mod">MODELLED</span>`);c.on("click",()=>selectSegment(s.id));heatLayer.addLayer(c);});
+  heatLayer.addTo(map);
+}
+function paintCompetitors(){
+  if(competitorLayer){map.removeLayer(competitorLayer);competitorLayer=null;}
+  if(!competitorsOn||isOther(concept))return;
+  const ci=UNITCATS.indexOf(concept.cat),renderer=L.canvas({padding:.5});competitorLayer=L.layerGroup();
+  UNITS.forEach(u=>{if(u[2]!==ci||!u[6])return;const m=L.circleMarker([u[0],u[1]],{renderer,radius:5,weight:1,color:"#8c2f39",fillColor:"#ed5965",fillOpacity:.86});m.bindPopup(`<b>${u[6]}</b><br>${UNITCATS[u[2]].replace("_"," ")} <span class="chip obs">OBSERVED</span>${u[7]?"<br>"+u[7]:""}<br><small>OpenStreetMap ${META.osm_date}. Presence, not vacancy or trading status.</small>`);competitorLayer.addLayer(m);});
+  competitorLayer.addTo(map);
 }
 
 /* ---------- ranking list ---------- */
@@ -948,9 +968,13 @@ function renderMapControls(){
     <span class="mc-label">Colour by:</span>
     <button class="mc ${mapMetric==='fit'?'on':''}" id="mc-fit">Fit score</button>
     <button class="mc ${mapMetric==='rev'?'on':''}" id="mc-rev">Est. revenue</button>
+    <button class="mc ${heatOn?'on':''}" id="mc-heat" title="Every published segment as a city-wide fit surface">All-segment heatmap (${SEGS.length.toLocaleString("en-GB")})</button>
+    <button class="mc ${competitorsOn?'on':''}" id="mc-competitors" title="Named same-category businesses recorded in OpenStreetMap">Competitors (OBSERVED)</button>
     <button class="mc ${streetsOn?'on':''}" id="mc-streets" title="Street-level pitches: every named retail street and parade with 8+ recorded units. They appear automatically when you zoom in.">Streets (${SEGS.filter(s=>s.lvl==='street').length.toLocaleString("en-GB")})</button>
     <button class="mc ${unitsOn?'on':''}" id="mc-units" title="Every real commercial unit from OpenStreetMap inside the covered segments, coloured by estimated monthly revenue for your concept">Every unit (${UNITS.length.toLocaleString("en-GB")})</button>`;
   $("mc-fit").onclick=()=>{mapMetric="fit";renderMapControls();update();};
+  $("mc-heat").onclick=()=>{heatOn=!heatOn;renderMapControls();update();};
+  $("mc-competitors").onclick=()=>{competitorsOn=!competitorsOn;renderMapControls();update();};
   $("mc-rev").onclick=()=>{mapMetric="rev";renderMapControls();update();};
   $("mc-units").onclick=()=>{unitsOn=!unitsOn;unitsAuto=false;renderMapControls();update();};
   $("mc-streets").onclick=()=>{streetsOn=!streetsOn;streetsAuto=false;renderMapControls();update();};
