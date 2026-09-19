@@ -189,6 +189,7 @@ function buildReport(id){
       <div class="rrange"><div class="rrange-track"><i class="rrange-lo" style="left:0%"></i><i class="rrange-mid" style="left:${pos(mid)}%"></i><i class="rrange-hi" style="left:100%"></i></div>
       <div class="rrange-lbls"><span>${money(lo)}<br>low</span><span>${money(mid)}<br>central</span><span>${money(hi)}<br>high</span></div></div>
       <div class="rmini">Range x0.55 to x1.6 of central - capture-rate uncertainty dominates. Planning estimate, not a valuation.</div>
+      ${revBreakdownHTML(rev,s,c,true)}
     </div>
     <div class="rcard"><div class="rsub">How it is built ${chip("mod")}</div>
       ${kv("People passing in your trading windows / week",fmt(Math.round(rev.people)))}
@@ -196,13 +197,14 @@ function buildReport(id){
       ${kv("Competition dilution factor","x"+rev.comp.toFixed(2))}
       ${kv("Audience factor","x"+rev.aud.toFixed(2))}
       ${trans}
-      ${rev.capped?kv("Capped by unit throughput (seats x covers + m² x throughput)","yes"):""}
+      ${rev.capped?kv("Capped by unit throughput (seats x covers + m² x throughput, weak absorption beyond)","yes"):""}
+      ${rev.rivals!=null?kv("Recorded rivals within radius (resident pool shared across them)",String(rev.rivals)):""}
       ${kv("Monthly = weekly transactions x ticket x 4.33",money(mid))}
       ${kv("Weekly equivalent (central)",money(mid/4.33),"mod")}
       ${kv(`Monthly revenue per m² of your ${c.floorspace} m² unit`,money(mid/c.floorspace),"mod")}
     </div>
   </div>
-  <div class="rnote">Rule: weekly station flow in your hours x category capture rate x dilution x audience fit + resident spend, x your ${money(c.ticket)} ticket. All constants are published on the Method section of the site - transparent assumptions you can argue with, not observed takings.</div>${cmpNote}`;
+  <div class="rnote">Rule: passing flow in your hours x capture rate x dilution x audience fit, plus the resident category pool shared across recorded rivals, capped by physical throughput, x your ${money(c.ticket)} ticket x 4.33. All constants are published on the Method section of the site - transparent assumptions you can argue with, not observed takings.</div>${cmpNote}`;
 
   /* S9 scorecard */
   const critRows=Object.values(r.crit).sort((a,b)=>b.w-a.w).map(cr=>bar(cr.label,pct(cr.score),cr.how==="obs"?"obs":cr.how==="ctx"?"ctx":"mod",`${pct(cr.score)} · w ${(cr.w*100).toFixed(0)}%`)).join("");
@@ -217,7 +219,7 @@ function buildReport(id){
       <div class="rleg">${chip("ctx")} describes the surrounding statistical area - ${CITY.eu?"Census 2021 1 km grid (Eurostat), city-level modelled rents":"Census LSOA, Met Police, VOA borough"}.</div>
       <div class="rleg">${chip("mod")} a transparent estimate the model computes - the rule is always shown.</div>
       <div class="rsub" style="margin-top:10px">Key model constants</div>
-      <div class="rmini">Capture rates: grocery 3.0%, café 2.0%, fast food 1.8%, pub/bar 1.5%, restaurant 1.2% of passers-by in trading windows. Dilution 1/(1+k x rivals within ${COMPR[c.cat]} m). Audience factor x0.5-x1.5. Revenue range x0.55-x1.6. Capacity: seats x weekly covers + floorspace x throughput per m², with soft absorption beyond.</div>
+      <div class="rmini">Capture rates: grocery 3.0%, café 2.0%, fast food 1.8%, pub/bar 1.5%, restaurant 1.2% of passers-by in trading windows, diluted 1/(1+k x rivals within ${COMPR[c.cat]} m). Resident demand: weekly category propensity x residents, shared across all recorded rivals (1/(1+rivals)). Audience factor x0.5-x1.5. Revenue range x0.55-x1.6. Capacity: seats x weekly covers + floorspace x throughput per m², weak absorption beyond (x^0.3).</div>
     </div>
     <div class="rcard"><div class="rsub">Sources</div>
       <div class="rkv2"><span class="rl">Station flows ${chip("obs")}</span><span class="rv">${META.numbat}</span></div>

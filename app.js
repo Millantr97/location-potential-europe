@@ -375,17 +375,17 @@ function scoreSegment(s,c){
 
 /* ---------- revenue engine (MODELLED) ---------- */
 const REV={
-  cafe:{capture:0.020,dil:0.12,prop:0.30,turns:20,thru:6},
-  restaurant:{capture:0.012,dil:0.10,prop:0.12,turns:12,thru:2},
-  fast_food:{capture:0.018,dil:0.12,prop:0.18,turns:25,thru:12},
-  pub_bar:{capture:0.015,dil:0.06,prop:0.15,turns:12,thru:1.5},
-  grocery:{capture:0.030,dil:0.15,prop:0.80,turns:0,thru:25},
+  cafe:{capture:0.020,dil:0.12,prop:0.15,turns:20,thru:6},
+  restaurant:{capture:0.012,dil:0.10,prop:0.06,turns:12,thru:2},
+  fast_food:{capture:0.018,dil:0.12,prop:0.09,turns:25,thru:12},
+  pub_bar:{capture:0.015,dil:0.06,prop:0.07,turns:12,thru:1.5},
+  grocery:{capture:0.030,dil:0.15,prop:0.40,turns:0,thru:25},
   fitness:{capture:0,dil:0.25,prop:0},
   cowork:{capture:0,dil:0.30,prop:0},
-  services:{capture:0.002,dil:0.15,prop:0.02,turns:12,thru:2},
-  agents:{capture:0.00005,dil:0.20,prop:0.002,turns:0,thru:0},
-  pharmacy:{capture:0.020,dil:0.20,prop:0.50,turns:0,thru:30},
-  vets:{capture:0.001,dil:0.25,prop:0.02,turns:6,thru:1},
+  services:{capture:0.002,dil:0.15,prop:0.01,turns:12,thru:2},
+  agents:{capture:0.00005,dil:0.20,prop:0.001,turns:0,thru:0},
+  pharmacy:{capture:0.020,dil:0.20,prop:0.25,turns:0,thru:30},
+  vets:{capture:0.001,dil:0.25,prop:0.01,turns:6,thru:1},
 };
 const DAYREL7=s=>DAYTYPE.reduce((a,k)=>a+s.flow.day_rel[k],0);
 function weeklyFlowAbs(s){const d=s.flow.days;return d.mon+3*d.mid+d.fri+d.sat+d.sun;}
@@ -399,23 +399,68 @@ function revenueFor(s,c){
   const awSum=Object.values(aw).reduce((a,b)=>a+b,0);
   const audFit=awSum?Object.keys(aw).reduce((acc,k)=>acc+aw[k]*sup[k],0)/awSum:0.5;
   const aud=0.5+audFit;
-  let month,weekTrans,members,capped=false;
+  const rivals=compCount(s,c.cat);
+  const compStrong=isOther(c)?1:1/(1+rivals); /* resident demand is a category pool shared across every recorded rival */
+  const weeklyFlow=weeklyFlowAbs(s);
+  let month,weekTrans,members,capped=false,flowTrans=0,resTrans=0,raw=0,cap=0,resConv=0,flowConv=0;
   if(c.cat==="fitness"){
-    members=(s.lsoa.residents*0.06+people*0.0015)*comp*aud;
+    resConv=0.03; flowConv=0.0015;
+    resTrans=s.lsoa.residents*resConv*compStrong; flowTrans=people*flowConv*comp;
+    members=(resTrans+flowTrans)*aud;
     const joined=Math.min(c.seats*10,members);
     month=joined*c.ticket*2.6; weekTrans=0;
   }else if(c.cat==="cowork"){
-    const demand=(s.lsoa.residents*0.02+people*0.0008)*comp*aud;
+    resConv=0.01; flowConv=0.0008;
+    resTrans=s.lsoa.residents*resConv*compStrong; flowTrans=people*flowConv*comp;
+    const demand=(resTrans+flowTrans)*aud;
     const desks=Math.min(c.seats,demand);
     month=desks*c.ticket*9; weekTrans=0; members=desks;
   }else{
-    const raw=people*R.capture*comp*aud + s.lsoa.residents*R.prop*comp*aud;
-    const cap=c.seats*R.turns + c.floorspace*R.thru; // weekly throughput the unit can physically serve
+    flowTrans=people*R.capture*comp; /* impulse capture from passing flow: weak dilution */
+    resTrans=s.lsoa.residents*R.prop*compStrong; /* resident category purchases: shared across all recorded rivals */
+    raw=(flowTrans+resTrans)*aud;
+    cap=c.seats*R.turns + c.floorspace*R.thru; // weekly throughput the unit can physically serve
     capped=cap>0&&raw>cap;
-    weekTrans=capped?cap*Math.pow(raw/cap,0.4):raw; // soft capacity: queues and faster turns absorb some excess, with diminishing returns
+    weekTrans=capped?cap*Math.pow(raw/cap,0.3):raw; // soft capacity: queues and faster turns absorb some excess, with diminishing returns
     month=weekTrans*c.ticket*4.33;
   }
-  return {month,low:month*0.55,high:month*1.6,weekTrans,people,cover,comp,aud,members,capped};
+  return {month,low:month*0.55,high:month*1.6,weekTrans,people,cover,comp,compStrong,aud,members,capped,flowTrans,resTrans,raw,cap,rivals,weeklyFlow,resConv,flowConv,capture:R.capture,prop:R.prop,dil:R.dil,turns:R.turns,thru:R.thru};
+}
+
+function revBreakdownHTML(rev,s,c,open){
+  const R=REV[c.cat]||REV.cafe;
+  const pct=v=>(v*100).toFixed(v<0.01?3:1)+"%";
+  const line=(l,v,chip)=>`<div class="ev-line"><span class="lv">${l}${chip||""}</span><span class="rv">${v}</span></div>`;
+  const radius=isOther(c)?null:COMPR[c.cat];
+  let rows="";
+  if(c.cat==="fitness"||c.cat==="cowork"){
+    rows+=line("Residents nearby (census)",fmt(Math.round(s.lsoa.residents)),chipFor("ctx"));
+    rows+=line(`Resident conversion (${pct(rev.resConv)} join as members, shared across ${rev.rivals+1} recorded rivals)`+(c.cat==="fitness"?"":" - desks"),fmt(Math.round(rev.resTrans)),chipFor("mod"));
+    rows+=line(`Flow conversion (${pct(rev.flowConv)} of ${fmt(Math.round(rev.people))} weekly passers-by in your hours, x${rev.comp.toFixed(2)} dilution)`,fmt(Math.round(rev.flowTrans)),chipFor("mod"));
+    rows+=line("Audience fit","x"+rev.aud.toFixed(2),chipFor("mod"));
+    rows+=line("Modelled "+(c.cat==="fitness"?"members":"desks")+" demand",fmt(Math.round(rev.members)),chipFor("mod"));
+    rows+=line("Capacity cap (your "+(c.cat==="fitness"?"equipment x 10":"desks")+")",c.cat==="fitness"?c.seats*10:c.seats,chipFor("mod"));
+    rows+=line("Price per "+(c.cat==="fitness"?"member (~2.6x day ticket)":"desk (~9x day rate)"),money(c.ticket*(c.cat==="fitness"?2.6:9))+"/mo",chipFor("mod"));
+  }else{
+    rows+=line("Weekly station flow anchor",fmt(Math.round(rev.weeklyFlow)),chipFor(s.weak?"mod":"obs"));
+    rows+=line("Share passing inside your trading windows",pct(rev.cover),chipFor("mod"));
+    rows+=line("People passing in your windows / week",fmt(Math.round(rev.people)),chipFor("mod"));
+    rows+=line(`Category capture rate (${pct(rev.capture)} of passers-by transact)`,"",chipFor("mod"));
+    rows+=line(`Competition dilution on passing trade: 1/(1 + ${rev.dil} x ${rev.rivals} rivals within ${radius} m)`,"x"+rev.comp.toFixed(2),chipFor("mod"));
+    rows+=line("= transactions from passing trade / week",fmt(Math.round(rev.flowTrans)),chipFor("mod"));
+    rows+=line("Residents nearby (census)",fmt(Math.round(s.lsoa.residents)),chipFor("ctx"));
+    rows+=line(`Weekly category purchases per resident (${rev.prop}) - a category pool, not your sales`,"",chipFor("mod"));
+    rows+=line(`Pool shared across ${rev.rivals} recorded rival${rev.rivals===1?"":"s"} + you: 1/(1+${rev.rivals})`,"x"+rev.compStrong.toFixed(2),chipFor("mod"));
+    rows+=line("= transactions from residents / week",fmt(Math.round(rev.resTrans)),chipFor("mod"));
+    rows+=line("Audience fit","x"+rev.aud.toFixed(2),chipFor("mod"));
+    rows+=line("Raw demand / week",fmt(Math.round(rev.raw)),chipFor("mod"));
+    rows+=line(`Physical capacity / week (${c.seats} seats x ${rev.turns} turns + ${c.floorspace} m² x ${rev.thru})`,fmt(Math.round(rev.cap)),chipFor("mod"));
+    rows+=line(rev.capped?"Capped: demand exceeds capacity; queues absorb with diminishing returns (cap x (demand/cap)^0.3)":"Demand within capacity - no cap applied",rev.capped?fmt(Math.round(rev.weekTrans))+" served":"-",chipFor("mod"));
+    rows+=line("Your average ticket",money(c.ticket));
+    rows+=line("Weeks per month","x4.33");
+  }
+  rows+=line("Plausible range (capture-rate uncertainty)",money(rev.low)+" - "+money(rev.high),chipFor("mod"));
+  return `<details class="rev-details"${open?" open":""}><summary><b>Estimated monthly revenue ${money(rev.month)}</b> ${chipFor("mod")} <span class="rev-more">every input used - tap to open</span></summary><div class="rev-body">${rows}<div class="ev-line"><span class="lv">Planning estimate with fixed rules, not observed takings. Override any input with your own counts - your figure wins.</span></div></div></details>`;
 }
 
 /* second pass needs demand normalization across segments */
@@ -815,14 +860,13 @@ function selectSegment(id,scroll){
       <div class="ev-line"><span class="lv">${CITY.texts.rentRule||"Rule: borough rateable value x segment-type factor x footfall factor, uplifted to 2026. Rates = unit RV proxy x 49.9p multiplier with Small Business Rate Relief below £15k RV. Get agent quotes before committing."}</span></div>
     </div>
     <div class="ev-card"><h4>Revenue potential for this concept${chipFor("mod")}</h4>
-      <div class="ev-line"><span class="lv"><b>Estimated monthly revenue</b></span><span class="rv"><b>${money(r.rev.month)}</b></span></div>
-      <div class="ev-line"><span class="lv">Plausible range (capture-rate uncertainty)</span><span class="rv">${money(r.rev.low)} - ${money(r.rev.high)}</span></div>
+      ${revBreakdownHTML(r.rev,s,concept,false)}
       ${r.rev.weekTrans?`<div class="ev-line"><span class="lv">Modelled transactions / week</span><span class="rv">${fmt(Math.round(r.rev.weekTrans))}</span></div>`:`<div class="ev-line"><span class="lv">Modelled members/desks</span><span class="rv">${fmt(Math.round(r.rev.members||0))}</span></div>`}
       <div class="ev-line"><span class="lv">People passing in your trading windows / week</span><span class="rv">${fmt(Math.round(r.rev.people))}</span></div>
       ${isOther(concept)?`<div class="ev-line"><span class="lv">Competition dilution: not applied (custom concept, no defined rival set)</span></div>`:`<div class="ev-line"><span class="lv">Competition dilution factor (${compCount(s,concept.cat)} rivals within ${COMPR[concept.cat]} m)</span><span class="rv">x${r.rev.comp.toFixed(2)}</span></div>`}
       <div class="ev-line"><span class="lv">Audience factor</span><span class="rv">x${r.rev.aud.toFixed(2)}</span></div>
       ${r.rev.capped?`<div class="ev-line"><span class="lv">Capped by unit throughput (seats x weekly covers + m² x throughput)</span><span class="rv">yes</span></div>`:""}
-      <div class="ev-line"><span class="lv">Rule: weekly station flow in your hours x category capture rate x dilution x audience fit + resident spend, x your ${CUR}${concept.ticket} ticket. All constants in Method. This is a planning estimate, not a valuation.</span></div>
+      <div class="ev-line"><span class="lv">Rule: passing flow in your hours x capture rate x dilution x audience fit, plus the resident category pool shared across recorded rivals, capped by what the unit can physically serve, x your ${CUR}${concept.ticket} ticket x 4.33. All constants in Method. This is a planning estimate, not a valuation.</span></div>
     </div>
     <div class="ev-card"><h4>Modelled for this concept${chipFor("mod")}</h4>
       <div class="ev-line"><span class="lv">Estimated typical spend / person nearby</span><span class="rv">${money(s.model.spend_est)}</span></div>
@@ -868,7 +912,7 @@ function renderMethod(){
     <p>Three estimates the tool computes and labels: (1) typical spend per person - from resident occupation mix, borough retail rateable value and chain presence; (2) office-worker skew - from coworking density and weekday-weighted station flows; (3) intraday rhythm - station day-type flows spread across five dayparts using the local offer mix (food, retail, nightlife, culture). Rules are fixed and shown so you can argue with them.</p>
     <p>These are the layers to override with your own counts before committing money.</p></div>
   <div class="m-card"><h4>Revenue model${chipFor("mod")}</h4>
-    <p>Estimated monthly revenue for your concept, per segment and per unit. Weekly station entries+exits passing in your exact trading windows are multiplied by a category capture rate (share of passers-by who transact: grocery 3.0%, cafe 2.0%, fast food 1.8%, pub/bar 1.5%, restaurant 1.2%), a competition dilution factor 1/(1 + k x rivals within the concept's competition radius), and an audience-fit factor (x0.5 to x1.5). Competition radius by concept type (how far away a rival still takes your customers): cafés and food-to-go 400 m; convenience services (hair, beauty, laundry, repair, florist, optician) 500 m; grocery, pharmacy, pubs and bars 600 m; restaurants, retail and vets 800 m; gyms, coworking and estate agents 1 km. Resident spend nearby is added from ${CITY.eu?"census-grid resident population":"LSOA population"} x weekly purchase propensity. Monthly revenue = transactions x your average ticket x 4.33. A unit can only serve what fits through it: seats x weekly covers plus floorspace x weekly throughput per m² caps transactions, with soft absorption (queues, faster turns) beyond it. Fitness and coworking use membership models: residents and flow convert to members at fixed rates, capped by capacity, priced at ~2.6x day ticket (fitness) or ~9x day desk rate (coworking). Choosing "Other" (a concept outside the list) scores location fit without a rival set: the competition criterion is removed from the score, no dilution is applied to revenue, and competition is shown as not scored.</p>
+    <p>Estimated monthly revenue for your concept, per segment and per unit. Weekly station entries+exits passing in your exact trading windows are multiplied by a category capture rate (share of passers-by who transact: grocery 3.0%, cafe 2.0%, fast food 1.8%, pub/bar 1.5%, restaurant 1.2%), a competition dilution factor 1/(1 + k x rivals within the concept's competition radius), and an audience-fit factor (x0.5 to x1.5). Competition radius by concept type (how far away a rival still takes your customers): cafés and food-to-go 400 m; convenience services (hair, beauty, laundry, repair, florist, optician) 500 m; grocery, pharmacy, pubs and bars 600 m; restaurants, retail and vets 800 m; gyms, coworking and estate agents 1 km. Resident demand nearby is added as a category pool: ${CITY.eu?"census-grid residents":"LSOA population"} x weekly category purchase propensity (cafe 0.15, restaurant 0.06, fast food 0.09, pub/bar 0.07, grocery 0.40, pharmacy 0.25, services 0.01, vets 0.01), shared evenly across the recorded rivals plus your unit (1/(1+rivals)) - it is never booked to one shop in full. Monthly revenue = transactions x your average ticket x 4.33. A unit can only serve what fits through it: seats x weekly covers plus floorspace x weekly throughput per m² caps transactions, with weak absorption beyond it (cap x (demand/cap)^0.3 - queues and faster turns absorb little). Fitness and coworking use membership models: residents convert at 3% (gym members) or 1% (cowork desks), the pool shared across recorded rivals, plus a small flow conversion, capped by capacity, priced at ~2.6x day ticket (fitness) or ~9x day desk rate (coworking). Choosing "Other" (a concept outside the list) scores location fit without a rival set: the competition criterion is removed from the score, no dilution is applied to revenue, and competition is shown as not scored.</p>
     <p>The shown range is x0.55 to x1.6 of the central estimate - capture-rate uncertainty dominates. These are transparent planning assumptions you can argue with, not observed takings. No source publishes real per-street revenue; where a chain unit's accounts exist they are for the company, not the site.</p></div>
   <div class="m-card"><h4>Every commercial unit${chipFor("obs")}</h4>
     <p>The “Every unit” map layer plots every commercial premises OpenStreetMap records across all covered streets and areas (food, retail, fitness, coworking), coloured by the MODELLED revenue your concept could make at that exact spot: the segment estimate x a distance-to-anchor decay x a hyperlocal competition factor (same-category units within 150 m). Chain flags from brand-name matching.</p>
