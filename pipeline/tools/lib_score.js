@@ -12,8 +12,9 @@ function appPrefix(repoRoot) {
 
 function loadCity(repoRoot, dir) {
   const window = {};
+  const cityFile = path.join(repoRoot, dir, 'city.js');
   const parts = [
-    fs.readFileSync(path.join(repoRoot, dir, 'city.js'), 'utf8'),
+    fs.existsSync(cityFile) ? fs.readFileSync(cityFile, 'utf8') : '/* no city.js: app.js default city (London) */',
     fs.readFileSync(path.join(repoRoot, dir, 'data', 'segments.js'), 'utf8'),
     appPrefix(repoRoot),
     '\n;return {CITY, META, SEGMENTS, PRESETS, SCRATCH, normalizeConcept, computeAll, revenueFor, COMPR, REV};'
