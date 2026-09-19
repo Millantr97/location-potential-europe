@@ -169,7 +169,7 @@ function buildReport(id){
       ${kv("Your average ticket",money(c.ticket))}
       ${kv("Estimated typical spend / person nearby",money(s.model.spend_est),"mod")}
       ${kv("Office-worker skew",Math.round(s.model.office_skew*100)+"%")}
-      <div class="rticket"><div class="rtick-l">£0</div><div class="rtick-track"><i class="rtick-spend" style="left:${clamp(s.model.spend_est/(c.ticket*2.2)*100,2,98)}%"></i><i class="rtick-you" style="left:${clamp(c.ticket/(c.ticket*2.2)*100,2,98)}%"></i></div><div class="rtick-l">${money(Math.round(c.ticket*2.2))}</div></div>
+      <div class="rticket"><div class="rtick-l">${money(0)}</div><div class="rtick-track"><i class="rtick-spend" style="left:${clamp(s.model.spend_est/(c.ticket*2.2)*100,2,98)}%"></i><i class="rtick-you" style="left:${clamp(c.ticket/(c.ticket*2.2)*100,2,98)}%"></i></div><div class="rtick-l">${money(Math.round(c.ticket*2.2))}</div></div>
       <div class="rtick-legend"><span><i class="dot dot-spend"></i>typical spend nearby ${money(s.model.spend_est)}</span><span><i class="dot dot-you"></i>your ticket ${money(c.ticket)}</span></div>
       <div class="rmini">Spend estimated from occupation mix, borough retail values and chain presence.</div>
     </div>
