@@ -68,4 +68,9 @@ for root,ds,fs in os.walk('versus'):
   cur='£' if city in UK else re.search(r'cur:"([^\"]+)"',open(f'{city}/city.js',encoding='utf-8').read()).group(1)
   vals.append((v,cur))
  text=re.sub(r'(<tr><td>Median modelled rent \(per m2/year, local\)</td><td>).*?(</td><td>).*?(</td></tr>)',lambda m:m.group(1)+vals[0][1]+f'{vals[0][0]:,}'+m.group(2)+vals[1][1]+f'{vals[1][0]:,}'+m.group(3),text)
+ # Narrative must follow the refreshed figures. Values are local-currency figures,
+ # so this is an within-row display comparison, not an FX-adjusted affordability claim.
+ names=[re.search(r'<h1>([^<]+) vs ',text).group(1), re.search(r'<h1>[^<]+ vs ([^:]+):',text).group(1)]
+ lower=names[0] if vals[0][0] < vals[1][0] else names[1]
+ text=re.sub(r'<b>[^<]+</b> shows the lower median modelled rent\.',f'<b>{lower}</b> shows the lower median modelled rent.',text)
  open(p,'w',encoding='utf-8').write(text)
