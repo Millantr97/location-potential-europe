@@ -1,0 +1,45 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cost of opening calculator - what does it cost to open in a European city?</title><meta name="description" content="Model the cost of opening a shop, cafe or restaurant in 136 European cities: rent band in local currency, registration, licences, fit-out and staffing. Every figure labelled modelled or estimated."><link rel="canonical" href="https://millantr97.github.io/location-potential-europe/cost-calculator/"><meta property="og:title" content="Cost of opening calculator - what does it cost to open in a European city?"><meta property="og:description" content="Model the cost of opening a shop, cafe or restaurant in 136 European cities: rent band in local currency, registration, licences, fit-out and staffing. Every figure labelled modelled or estimated."><meta property="og:type" content="website"><link rel="manifest" href="../manifest.webmanifest"><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../styles.css?v=38"></head><body><header class="top"><div class="top-row"><a class="brand" href="../">Location <span>Potential</span><i class="brand-city">Europe</i></a></div></header>
+<main class="docs">
+<div class="eyebrow">Interactive · every figure labelled</div>
+<h1>Cost of opening calculator</h1>
+<p>Pick a city and a concept. The calculator combines the published rent model with estimated registration, licence, fit-out and staffing ranges. <b class="c-mod">MODELLED</b> and <b>ESTIMATED</b> figures are orientation for shortlisting, never quotes - verify with agents and authorities before budgeting.</p>
+<div class="alerts-panel" style="margin:18px 0"><div>
+<label>City<select id="cc-city"></select></label>
+<label>Concept category<select id="cc-concept"></select></label>
+<label>Premises size (m2)<input id="cc-size" type="number" min="15" max="2000" step="5"></label>
+<label>Staff (full-time equivalent)<input id="cc-staff" type="number" min="0" max="50" step="1" value="2"></label>
+<button class="action primary" id="cc-go" type="button">Estimate</button>
+</div></div>
+<div id="cc-out"></div>
+<p class="honesty">Method: rent = the city's modelled annual rent per m2 (p25 / median / p75 across its scored segments) times your size. Registration and licences = estimated national ranges in EUR. Staffing = estimated monthly cost per full-time employee including employer contributions, in EUR. Fit-out = EUR 400-950 per m2 depending on standard. Nothing here is a quote.</p>
+</main>
+<script src="cost-data.js"></script>
+<script>
+const eur=n=>'&euro;'+Math.round(n).toLocaleString('en-GB');
+const loc=(c,n)=>c.cur+Math.round(n).toLocaleString('en-GB');
+const citySel=document.getElementById('cc-city'),conSel=document.getElementById('cc-concept'),sizeIn=document.getElementById('cc-size');
+COST_CITIES.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=c.name+' ('+c.country+')';citySel.appendChild(o);});
+Object.keys(CONCEPT_SIZES).forEach(k=>{const o=document.createElement('option');o.textContent=k;conSel.appendChild(o);});
+function syncSize(){sizeIn.value=CONCEPT_SIZES[conSel.value];}
+conSel.addEventListener('change',syncSize);syncSize();
+citySel.value=String(COST_CITIES.findIndex(c=>c.id==='valencia'));
+const q=new URLSearchParams(location.search);if(q.get('city')){const i=COST_CITIES.findIndex(c=>c.id===q.get('city'));if(i>=0)citySel.value=String(i);}
+document.getElementById('cc-go').addEventListener('click',()=>{
+ const c=COST_CITIES[+citySel.value],size=+sizeIn.value||60,staff=+document.getElementById('cc-staff').value||0;
+ const rentY=c.rent.map(r=>r*size),rentM=rentY.map(r=>r/12);
+ const oneOff=[c.reg[0]+c.lic[0]+FITOUT_PER_M2[0]*size, c.reg[1]+c.lic[1]+FITOUT_PER_M2[2]*size];
+ const staffMo=[staff*c.staff[0], staff*c.staff[1]];
+ document.getElementById('cc-out').innerHTML=`
+ <h2>${c.name}: ${conSel.value}, ${size} m2, ${staff} staff</h2>
+ <table class="api-table"><thead><tr><th>Item</th><th>Low</th><th>High</th><th>Label</th></tr></thead><tbody>
+ <tr><td>Rent per year (${c.cur}, local)</td><td>${loc(c,rentY[0])}</td><td>${loc(c,rentY[2])}</td><td><b class="c-mod">MODELLED</b> from ${c.n} scored segments, median ${loc(c,c.rent[1])}/m2</td></tr>
+ <tr><td>Rent per month (${c.cur}, local)</td><td>${loc(c,rentM[0])}</td><td>${loc(c,rentM[2])}</td><td><b class="c-mod">MODELLED</b></td></tr>
+ <tr><td>Registration (one-off)</td><td>${eur(c.reg[0])}</td><td>${eur(c.reg[1])}</td><td>ESTIMATED national range</td></tr>
+ <tr><td>Licences (one-off)</td><td>${eur(c.lic[0])}</td><td>${eur(c.lic[1])}</td><td>ESTIMATED, municipality-dependent</td></tr>
+ <tr><td>Fit-out (one-off)</td><td>${eur(FITOUT_PER_M2[0]*size)}</td><td>${eur(FITOUT_PER_M2[2]*size)}</td><td><b class="c-mod">MODELLED</b> EUR/m2</td></tr>
+ <tr><td><b>Total to open the door</b></td><td><b>${eur(oneOff[0])}</b></td><td><b>${eur(oneOff[1])}</b></td><td>excl. deposit, stock, first rent</td></tr>
+ <tr><td>Staff per month (EUR)</td><td>${eur(staffMo[0])}</td><td>${eur(staffMo[1])}</td><td>ESTIMATED incl. employer contributions</td></tr>
+ </tbody></table>
+ <p>Next: see the <a href="../${c.id}/">scored zones in ${c.name}</a>, the <a href="../guides/">licence guide for ${c.country}</a>, or <a href="../audit/">get a free mini-audit of a specific address</a>.</p>`;
+});
+</script><footer class="foot hub-wrap"><div>Location Potential · Europe · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and licensing checks.</div><div class="foot-links"><a href="../">Home</a><a href="../methodology/">Methodology</a><a href="../developers/">Data API</a><a href="../privacy.html">Privacy Notice</a></div></footer><div class="freshness">Data updated 17 September 2026 · interface updated 20 September 2026</div><script src="../pwa.js?v=2"></script></body></html>

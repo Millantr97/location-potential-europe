@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Free mini-audit - send your address, get a score back</title><meta name="description" content="Tell us the street or area you are considering and the concept you want to open. We score it against the published Location Potential data and email you the result. Free, one per person."><link rel="canonical" href="https://millantr97.github.io/location-potential-europe/audit/"><meta property="og:title" content="Free mini-audit - send your address, get a score back"><meta property="og:description" content="Tell us the street or area you are considering and the concept you want to open. We score it against the published Location Potential data and email you the result. Free, one per person."><meta property="og:type" content="website"><link rel="manifest" href="../manifest.webmanifest"><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../styles.css?v=38"></head><body><header class="top"><div class="top-row"><a class="brand" href="../">Location <span>Potential</span><i class="brand-city">Europe</i></a></div></header>
+<main class="docs">
+<div class="eyebrow">Free · one per person</div>
+<h1>Free mini-audit: your address, scored</h1>
+<p>Considering a specific street or area? Send it with your concept. We run it against the same dataset that powers this site - observed competition, area residents, modelled flow and rents - and email you a short score with the reasoning. Free, one audit per person, answered within a few working days.</p>
+<section class="alerts-panel" style="margin:18px 0"><div>
+<form id="audit-form" action="https://formsubmit.co/ajax/amazonmillan9@gmail.com" method="POST">
+<input type="hidden" name="_subject" value="Location Potential Europe - mini-audit / report request">
+<input type="hidden" name="_captcha" value="false">
+<label>Full name<input required autocomplete="name" name="name" placeholder="Your name"></label>
+<label>Email<input required type="email" autocomplete="email" name="email" placeholder="you@example.com"></label>
+<label>City<input required name="city" list="audit-city-list" placeholder="e.g. Valencia"><datalist id="audit-city-list"></datalist></label>
+<label>Street or area you are considering<input required name="address" placeholder="e.g. Calle de Col&oacute;n, or Ruzafa district"></label>
+<label>Concept you want to open<input required name="concept" placeholder="e.g. specialty coffee shop"></label>
+<label>Anything else we should know<textarea name="notes" rows="3" placeholder="Budget, timeline, second option..."></textarea></label>
+<label class="digest-check"><input required type="checkbox" name="consent" value="yes"> I agree to be contacted by email about this request.</label>
+<button class="action primary" type="submit">Request my free mini-audit</button>
+<p class="form-legal">By submitting, you confirm you have read the <a href="../privacy.html">Privacy Notice</a>. Your details are handled by our form provider and sent to Location Potential by email. Mini-audits are fulfilled manually - a person reads your request and runs the data.</p>
+<div class="form-status" id="audit-status" role="status" aria-live="polite"></div>
+</form></div></section>
+<h2>What you get back</h2>
+<p>A short email with: the fit score of your area for your concept, how it ranks against the city's top zones, the recorded competition nearby, and the two or three checks worth doing on the ground. If your city or street is not in the dataset, we say so instead of guessing.</p>
+<p>Need the full written analysis? See the <a href="../report/">market entry report</a>.</p>
+</main>
+<script>document.addEventListener('DOMContentLoaded',()=>{const dl=document.getElementById('audit-city-list');fetch('../api/v1/index.json').then(r=>r.json()).then(ix=>{const cs=(ix.cities||[]).map(c=>c.name||c);cs.sort();dl.innerHTML=cs.map(n=>`<option value="${n}"></option>`).join('');}).catch(()=>{});const f=document.getElementById('audit-form');f.addEventListener('submit',async e=>{e.preventDefault();const st=document.getElementById('audit-status'),b=f.querySelector('button');b.disabled=true;st.textContent='Sending...';try{const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});if(!r.ok)throw 0;st.textContent='Request received - watch your inbox.';f.reset();}catch(_){st.textContent='Could not send. Please try again.';}b.disabled=false;});});</script><footer class="foot hub-wrap"><div>Location Potential · Europe · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and licensing checks.</div><div class="foot-links"><a href="../">Home</a><a href="../methodology/">Methodology</a><a href="../developers/">Data API</a><a href="../privacy.html">Privacy Notice</a></div></footer><div class="freshness">Data updated 17 September 2026 · interface updated 20 September 2026</div><script src="../pwa.js?v=2"></script></body></html>
