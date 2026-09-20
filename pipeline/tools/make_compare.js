@@ -10,8 +10,8 @@ const citiesSrc = fs.readFileSync(path.join(root, 'cities.js'), 'utf8');
 const CITIES = JSON.parse(citiesSrc.match(/window\.CITIES=(\[.*\]);/s)[1]).slice(1); // drop hub
 
 /* FX: ECB reference rates via Frankfurter, 18 Sep 2026; BGN pegged. Ranking-only conversion. */
-const FX = { EUR:1, GBP:0.8588, PLN:4.3635, CZK:24.339, HUF:364.28, SEK:11.2915, NOK:10.8095, DKK:7.4754, CHF:0.9462, RON:5.2647, BGN:1.9558 };
-const COUNTRY2CODE = { 'United Kingdom':'GBP', 'Poland':'PLN', 'Czechia':'CZK', 'Hungary':'HUF', 'Sweden':'SEK', 'Norway':'NOK', 'Denmark':'DKK', 'Switzerland':'CHF', 'Romania':'RON', 'Bulgaria':'BGN' }; // everything else in the set is EUR
+const FX = { EUR:1, USD:1.174, AUD:1.764, GBP:0.8588, PLN:4.3635, CZK:24.339, HUF:364.28, SEK:11.2915, NOK:10.8095, DKK:7.4754, CHF:0.9462, RON:5.2647, BGN:1.9558 };
+const COUNTRY2CODE = { 'United Kingdom':'GBP', 'Poland':'PLN', 'Czechia':'CZK', 'Hungary':'HUF', 'Sweden':'SEK', 'Norway':'NOK', 'Denmark':'DKK', 'Switzerland':'CHF', 'Romania':'RON', 'Bulgaria':'BGN', 'United States':'USD', 'Australia':'AUD' }; // everything else in the set is EUR
 
 let concepts = null, perConcept = {};
 for (const c of CITIES) {

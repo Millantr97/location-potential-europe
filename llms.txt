@@ -22,3 +22,5 @@
 
 ## Current limits
 This is a static, cacheable preview with no API key, uptime SLA or write actions. It cannot accept audit requests or create reports through the API. The website's forms remain the human route for those actions.
+
+- Coverage: 148 published cities and 60,018 scored zones across Europe, the United States and Australia.

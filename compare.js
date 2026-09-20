@@ -1,4 +1,4 @@
-/* Location Potential Europe - scope-first cross-city comparison.
+/* Location Potential global - scope-first cross-city comparison.
    Start with broad regions or featured cities; search all cities only on demand.
    The map is real geography (Natural Earth land outline) with city dots on top,
    and supports free-form area drawing (lasso) to select cities. */
@@ -6,10 +6,10 @@
 const root=document.getElementById('compare-app'); if(!root)return;
 if(new URLSearchParams(location.search).get('embed')==='1')document.body.classList.add('embed-mode');
 const ALL=window.CITIES.slice(1);
-const REGIONS=["Southern","Western","Northern","Eastern"];
-const RCOL={Southern:"#c0563f",Western:"#2c6e59",Northern:"#3a5a8c",Eastern:"#8a6d3b"};
+const REGIONS=["Southern","Western","Northern","Eastern","Americas","Oceania"];
+const RCOL={Southern:"#c0563f",Western:"#2c6e59",Northern:"#3a5a8c",Eastern:"#8a6d3b",Americas:"#6b4fb3",Oceania:"#087f8c"};
 const COUNTRIES=[...new Set(ALL.map(c=>c.country))].sort();
-const FEATURED=['uk-london','madrid','paris','rome','berlin','barcelona','vienna','amsterdam','lisbon'];
+const FEATURED=['uk-london','new-york','los-angeles','chicago','sydney','melbourne','madrid','paris','berlin','rome','barcelona','singapore'].filter(id=>ALL.some(c=>c.id===id));
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
 const scope={regions:new Set(),countries:new Set(),cities:new Set(),all:true};
 let conceptId=null,zonesCache={},drawMode=false,drawPoly=null,lasso=null,suppressUrl=false;
@@ -24,17 +24,17 @@ function inScope(c){return scope.all||scope.regions.has(c.region)||scope.countri
 function scopeList(){return ALL.filter(inScope);}
 function ensureScope(){if(!scope.regions.size&&!scope.countries.size&&!scope.cities.size)scope.all=true;}
 function scopeLabel(){
-  if(scope.all)return "all Europe";
-  const parts=[...[...scope.regions].map(r=>r+" Europe"),...scope.countries,...[...scope.cities].map(id=>{const c=ALL.find(x=>x.id===id);return c?c.name:id;})];
-  return parts.join(" + ")||"all Europe";
+  if(scope.all)return "all covered markets";
+  const parts=[...[...scope.regions].map(r=>({Southern:"Southern Europe",Western:"Western Europe",Northern:"Northern Europe",Eastern:"Eastern Europe",Americas:"United States",Oceania:"Australia"}[r]||r)),...scope.countries,...[...scope.cities].map(id=>{const c=ALL.find(x=>x.id===id);return c?c.name:id;})];
+  return parts.join(" + ")||"all covered markets";
 }
 const eurFmt=n=>"€"+Math.round(n).toLocaleString("en-GB");
 function toggleCity(id){scope.all=false;scope.cities.has(id)?scope.cities.delete(id):scope.cities.add(id);ensureScope();renderAll();}
 
 function renderScope(){
   const box=document.getElementById('scope-chips');
-  box.innerHTML=`<button class="chip-scope ${scope.all?'on':''}" data-all="1" aria-pressed="${scope.all}">All Europe (${ALL.length} cities)</button>`
-    +REGIONS.map(r=>`<button class="chip-scope ${scope.regions.has(r)?'on':''}" data-region="${r}" aria-pressed="${scope.regions.has(r)}" style="--rc:${RCOL[r]}">${r} Europe</button>`).join('');
+  box.innerHTML=`<button class="chip-scope ${scope.all?'on':''}" data-all="1" aria-pressed="${scope.all}">All covered markets (${ALL.length} cities)</button>`
+    +REGIONS.map(r=>`<button class="chip-scope ${scope.regions.has(r)?'on':''}" data-region="${r}" aria-pressed="${scope.regions.has(r)}" style="--rc:${RCOL[r]}">${({Southern:"Southern Europe",Western:"Western Europe",Northern:"Northern Europe",Eastern:"Eastern Europe",Americas:"United States",Oceania:"Australia"}[r]||r)}</button>`).join('');
   const conceptLive=document.getElementById('concept-live');if(conceptLive){const chosen=CONCEPTS.find(p=>p.id===conceptId);conceptLive.textContent=chosen?chosen.name:'Choose one';}
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
     if(b.dataset.all){scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();drawPoly=null;}
@@ -65,7 +65,7 @@ function renderMap(){
   const land=(window.LPE_LAND||[]).map(d=>`<path class="land" d="${d}"/>`).join('');
   const dots=ALL.map(c=>{const r=Math.max(5,Math.min(14,4+Math.sqrt(c.n)/4.2)),dim=!sel.has(c.id);return `<g class="area-city" role="button" tabindex="0" data-city="${c.id}" aria-label="${c.name}, ${c.country}${dim?' - not selected':' - selected'}" aria-pressed="${!dim}"><circle class="mapdot${dim?' dim':''}" cx="${c.x}" cy="${c.y}" r="${r}" fill="${RCOL[c.region]}"><title>${c.name}, ${c.country} - ${c.n} segments</title></circle></g>`;}).join('');
   const area=drawPoly?`<path class="area-selection" d="${polyPath(drawPoly,true)}"/>`:'';
-  document.getElementById('scope-map').innerHTML=`<svg class="eumap area-map geo${drawMode?' drawing':''}" viewBox="95 274 730 830" role="img" aria-label="Map of Europe. Select city dots or draw a free-form area.">${land}${dots}${area}<path class="area-drag" hidden/></svg><div class="mapkey">Real map outline (Natural Earth, public domain) - dot size = scored segments, colour = macro-region. ${scope.all?'All cities in scope.':sel.size+' cities in scope.'}</div>`;
+  document.getElementById('scope-map').innerHTML=`<svg class="eumap area-map geo${drawMode?' drawing':''}" viewBox="0 0 1000 500" role="img" aria-label="World map. Select city dots or draw a free-form area.">${land}${dots}${area}<path class="area-drag" hidden/></svg><div class="mapkey">World map (Natural Earth, public domain) - dot size = scored segments, colour = macro-region. ${scope.all?'All cities in scope.':sel.size+' cities in scope.'}</div>`;
   bindMap();
   document.getElementById('draw-area').classList.toggle('on',drawMode);
   document.getElementById('draw-area').setAttribute('aria-pressed',drawMode);
@@ -132,7 +132,7 @@ function openScopeReport(){
   const p=CONCEPTS.find(x=>x.id===conceptId),rows=JSON.parse(document.getElementById('result-actions').dataset.rows||"[]"),meta=id=>ALL.find(c=>c.url===id+'/');
   const w=window.open("","_blank");if(!w)return;
   const body=rows.map((z,i)=>{const c=meta(z.c);return `<tr><td>${i+1}</td><td><b>${esc(z.n)}</b><small>${esc(c.name)}, ${esc(c.country)}</small></td><td>${z.s}/100</td><td><b>${eurFmt(z.e)}/mo</b><small>${esc(c.cur)}${z.r.toLocaleString("en-GB")} local</small></td></tr>`}).join("");
-  w.document.write(`<!doctype html><html><head><title>Location Potential - ${esc(p.name)} - ${esc(scopeLabel())}</title><style>@page{size:A4;margin:12mm}*{box-sizing:border-box}body{font:12px Arial;color:#16382c;margin:0}header{border-bottom:4px solid #b8e95b;padding-bottom:10px;margin-bottom:12px}h1{font-size:25px;margin:4px 0}.brand{font-size:16px;font-weight:800}.brand span{color:#598c16}.meta{color:#5d6b65}table{width:100%;border-collapse:collapse}td{padding:6px;border-bottom:1px solid #d9ddd7}td:first-child{width:24px;color:#777}td:nth-child(3),td:nth-child(4){text-align:right}small{display:block;color:#66736d;margin-top:2px}footer{margin-top:12px;padding-top:8px;border-top:1px solid #ccc;font-size:9px;color:#66736d}.labels{background:#f1f5ee;padding:8px;border-radius:6px;margin:8px 0}.obs{color:#15734b}.mod{color:#9b5b00}@media print{button{display:none}}</style></head><body><header><div class="brand">Location <span>Potential</span> Europe</div><h1>Top 20 zones for ${esc(p.name)}</h1><div class="meta">Scope: ${esc(scopeLabel())} · generated ${new Date().toLocaleDateString("en-GB")}</div></header><div class="labels"><b class="mod">MODELLED</b> revenue and fit for comparison. Open each city result for the full <b class="obs">OBSERVED</b> and AREA CONTEXT evidence.</div><table>${body}</table><footer>Decision-support report, not a valuation. Revenue uses local-currency models converted at ECB reference rates (${esc(window.FX_DATE)}). Verify shortlists with on-street counts, agent enquiries and licensing checks. Data updated 17 September 2026.</footer><script>setTimeout(()=>print(),250)<\/script></body></html>`);w.document.close();
+  w.document.write(`<!doctype html><html><head><title>Location Potential - ${esc(p.name)} - ${esc(scopeLabel())}</title><style>@page{size:A4;margin:12mm}*{box-sizing:border-box}body{font:12px Arial;color:#16382c;margin:0}header{border-bottom:4px solid #b8e95b;padding-bottom:10px;margin-bottom:12px}h1{font-size:25px;margin:4px 0}.brand{font-size:16px;font-weight:800}.brand span{color:#598c16}.meta{color:#5d6b65}table{width:100%;border-collapse:collapse}td{padding:6px;border-bottom:1px solid #d9ddd7}td:first-child{width:24px;color:#777}td:nth-child(3),td:nth-child(4){text-align:right}small{display:block;color:#66736d;margin-top:2px}footer{margin-top:12px;padding-top:8px;border-top:1px solid #ccc;font-size:9px;color:#66736d}.labels{background:#f1f5ee;padding:8px;border-radius:6px;margin:8px 0}.obs{color:#15734b}.mod{color:#9b5b00}@media print{button{display:none}}</style></head><body><header><div class="brand">Location <span>Potential</span> Global</div><h1>Top 20 zones for ${esc(p.name)}</h1><div class="meta">Scope: ${esc(scopeLabel())} · generated ${new Date().toLocaleDateString("en-GB")}</div></header><div class="labels"><b class="mod">MODELLED</b> revenue and fit for comparison. Open each city result for the full <b class="obs">OBSERVED</b> and AREA CONTEXT evidence.</div><table>${body}</table><footer>Decision-support report, not a valuation. Revenue uses local-currency models converted at ECB reference rates (${esc(window.FX_DATE)}). Verify shortlists with on-street counts, agent enquiries and licensing checks. Data updated 17 September 2026.</footer><script>setTimeout(()=>print(),250)<\/script></body></html>`);w.document.close();
 }
 
 function compactPoly(pts){if(!pts||!pts.length)return "";const step=Math.max(1,Math.ceil(pts.length/35));return pts.filter((_,i)=>i%step===0||i===pts.length-1).map(p=>Math.round(p.x)+"."+Math.round(p.y)).join("_");}

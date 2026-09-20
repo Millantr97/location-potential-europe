@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Location Potential",
   "short_name": "Location",
-  "description": "Street-level site selection and modelled revenue for new business locations across European cities.",
+  "description": "Street-level site selection and modelled revenue for new business locations across covered cities.",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",

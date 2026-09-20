@@ -59,7 +59,7 @@ window.lpeMapSVG=function(selId,curId){
 
 
 def main():
-    cities = [{"id":"hub","name":"All cities","country":"Global","url":""}]
+    cities = [{"id":"hub","name":"All covered cities","country":"Global","url":""}]
     dirs = sorted(dd for dd in os.listdir('.') if os.path.isdir(dd) and dd not in ("assets","pipeline") and os.path.exists(f"{dd}/data/segments.js") and dd not in LEGACY_UNLISTED)
     for d in dirs:
         m = city_meta(d); m.update(id=("uk-"+d if d in UK_NAMES else d), url=d+"/", n=seg_count(d), region=REGION[m["country"]])
