@@ -1,8 +1,8 @@
 const BASE = self.registration.scope;
-const VERSION = "location-potential-europe-pwa-v2";
+const VERSION = "location-potential-europe-pwa-v3";
 const CORE = [
   BASE, BASE+"index.html", BASE+"manifest.webmanifest", BASE+"offline.html",
-  BASE+"styles.css?v=38", BASE+"cities.js?v=10", BASE+"app.js?v=35",
+  BASE+"styles.css?v=44", BASE+"cities.js?v=11", BASE+"app.js?v=35",
   BASE+"report.js?v=21", BASE+"extras.js?v=21",
   BASE+"tabs.js?v=22", BASE+"leads.js?v=20",
   BASE+"assets/favicon.svg", BASE+"assets/icons/icon-192.png",
