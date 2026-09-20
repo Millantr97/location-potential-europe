@@ -35,6 +35,7 @@ function renderScope(){
   const box=document.getElementById('scope-chips');
   box.innerHTML=`<button class="chip-scope ${scope.all?'on':''}" data-all="1" aria-pressed="${scope.all}">All Europe (${ALL.length} cities)</button>`
     +REGIONS.map(r=>`<button class="chip-scope ${scope.regions.has(r)?'on':''}" data-region="${r}" aria-pressed="${scope.regions.has(r)}" style="--rc:${RCOL[r]}">${r} Europe</button>`).join('');
+  const conceptLive=document.getElementById('concept-live');if(conceptLive){const chosen=CONCEPTS.find(p=>p.id===conceptId);conceptLive.textContent=chosen?chosen.name:'Choose one';}
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
     if(b.dataset.all){scope.all=true;scope.regions.clear();scope.countries.clear();scope.cities.clear();drawPoly=null;}
     else{scope.all=false;scope.regions.has(b.dataset.region)?scope.regions.delete(b.dataset.region):scope.regions.add(b.dataset.region);ensureScope();}
@@ -49,6 +50,7 @@ function renderScope(){
   const picked=document.getElementById('scope-cities-picked');
   picked.innerHTML=[...scope.cities].filter(id=>!FEATURED.includes(id)).map(id=>{const c=ALL.find(x=>x.id===id);return `<button class="chip-scope on" data-city="${id}" aria-pressed="true">${c?c.name:id} ×</button>`;}).join('');
   picked.querySelectorAll('button').forEach(b=>b.onclick=()=>toggleCity(b.dataset.city));
+  const live=document.getElementById('scope-live');if(live)live.textContent=scopeList().length+' '+(scopeList().length===1?'city':'cities')+' selected';
 }
 function renderCitySearch(q){
   const res=document.getElementById('scope-cities-results');
@@ -103,6 +105,7 @@ function renderConcepts(){
       +Object.keys(CATLABEL).filter(c=>CONCEPTS.some(p=>p.cat===c)).map(c=>`<button class="preset filter ${conceptFilter===c?"active":""}" data-f="${c}">${CATLABEL[c]}</button>`).join("")+`</div>`:"";
   const moreBtn=`<button class="preset more" data-p="__more">${conceptsExpanded?'See fewer concepts':'See more concepts ('+(CONCEPTS.length-PRESETS_VISIBLE)+' more)'}</button>`;
   box.innerHTML=(conceptsExpanded?moreBtn:"")+filterRow+visible.map(p=>`<button class="preset ${p.id===conceptId?'active':''}" data-c="${p.id}" aria-pressed="${p.id===conceptId}">${p.name}</button>`).join('')+(conceptsExpanded?"":moreBtn); /* expanded list: collapse control first, not buried at the bottom */
+  const conceptLive=document.getElementById('concept-live');if(conceptLive){const chosen=CONCEPTS.find(p=>p.id===conceptId);conceptLive.textContent=chosen?chosen.name:'Choose one';}
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
     if(b.dataset.f){conceptFilter=b.dataset.f;renderConcepts();return;}
     if(b.dataset.p==='__more'){conceptsExpanded=!conceptsExpanded;if(!conceptsExpanded)conceptFilter="all";renderConcepts();return;}
@@ -121,7 +124,7 @@ function renderResults(){
   const cities=new Set(scopeList().map(c=>c.url.replace(/\/$/,'')));const zones=(zonesCache[conceptId]||[]).filter(z=>cities.has(z.c));const p=window.COMPARE_CONCEPTS.find(x=>x.id===conceptId);
   if(!zones.length){out.innerHTML='<div class="hub-note">No zones in this scope.</div>';return;}
   const ranked=zones.slice().sort((a,b)=>b.e-a.e).slice(0,20),meta=id=>ALL.find(c=>c.url===id+'/');
-  out.innerHTML=`<h3>Best zones for “${p.name}” across ${scopeLabel()}</h3><div class="hub-note">Ranked by modelled monthly revenue converted to EUR at ECB reference rates (${window.FX_DATE}) for comparability only - local currency is shown too and stays canonical. Every figure MODELLED; open the city page for the full input breakdown. Fit score is computed within each city.</div><div class="cmp-list" role="list">${ranked.map((z,i)=>{const c=meta(z.c);return `<a role="listitem" class="cmp-row" href="${window.LPE_BASE}${z.c}/?concept=${conceptId}"><span class="cmp-rank">${i+1}</span><span class="cmp-main"><b>${z.n}</b><span class="cmp-city">${c.name}, ${c.country} · fit ${z.s}/100</span></span><span class="cmp-rev"><b>${eurFmt(z.e)}/mo</b><span class="cmp-local">${c.cur}${z.r.toLocaleString("en-GB")} local · range ${c.cur}${z.lo.toLocaleString("en-GB")}-${c.cur}${z.hi.toLocaleString("en-GB")}</span></span></a>`;}).join('')}</div>`;
+  out.innerHTML=`<h3>Best zones for “${p.name}” across ${scopeLabel()}</h3><div class="hub-note">Ranked by modelled monthly revenue converted to EUR at ECB reference rates (${window.FX_DATE}) for comparability only - local currency is shown too and stays canonical. Every figure MODELLED; open the city page for the full input breakdown. Fit score is computed within each city.</div><div class="cmp-list" role="list">${ranked.map((z,i)=>{const c=meta(z.c);return `<a role="listitem" class="cmp-row ${i===0?'top-result':''}" href="${window.LPE_BASE}${z.c}/?concept=${conceptId}"><span class="cmp-rank">${i+1}</span><span class="cmp-main"><b>${z.n}</b><span class="cmp-city">${c.name}, ${c.country} · fit ${z.s}/100</span></span><span class="cmp-rev"><b>${eurFmt(z.e)}/mo</b><span class="cmp-local">${c.cur}${z.r.toLocaleString("en-GB")} local · range ${c.cur}${z.lo.toLocaleString("en-GB")}-${c.cur}${z.hi.toLocaleString("en-GB")}</span></span></a>`;}).join('')}</div>`;
   const actions=document.getElementById('result-actions');actions.hidden=false;actions.dataset.rows=JSON.stringify(ranked);actions.dataset.concept=p.name;syncUrl();
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
