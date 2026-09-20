@@ -9,6 +9,7 @@ REGION = {
  "United Kingdom":"Northern","Ireland":"Northern","Sweden":"Northern","Norway":"Northern","Finland":"Northern","Denmark":"Northern","Estonia":"Northern","Latvia":"Northern","Lithuania":"Northern",
  "France":"Western","Germany":"Western","The Netherlands":"Western","Belgium":"Western","Austria":"Western","Switzerland":"Western","Luxembourg":"Western",
  "Spain":"Southern","Portugal":"Southern","Italy":"Southern","Greece":"Southern","Croatia":"Southern","Slovenia":"Southern","Malta":"Southern",
+ "United States":"Americas","Australia":"Oceania",
  "Poland":"Eastern","Czechia":"Eastern","Slovakia":"Eastern","Hungary":"Eastern","Romania":"Eastern","Bulgaria":"Eastern",
 }
 # country display normalisation: single label for the Dutch group
@@ -58,7 +59,7 @@ window.lpeMapSVG=function(selId,curId){
 
 
 def main():
-    cities = [{"id":"hub","name":"All cities","country":"Europe","url":""}]
+    cities = [{"id":"hub","name":"All cities","country":"Global","url":""}]
     dirs = sorted(dd for dd in os.listdir('.') if os.path.isdir(dd) and dd not in ("assets","pipeline") and os.path.exists(f"{dd}/data/segments.js") and dd not in LEGACY_UNLISTED)
     for d in dirs:
         m = city_meta(d); m.update(id=("uk-"+d if d in UK_NAMES else d), url=d+"/", n=seg_count(d), region=REGION[m["country"]])
