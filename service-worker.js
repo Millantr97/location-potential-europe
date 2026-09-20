@@ -25,6 +25,10 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
 
+  // Safari requests video in byte ranges. Let the network satisfy those requests
+  // directly: Cache Storage cannot safely serve a cached full response as a 206.
+  if (event.request.headers.has("range") || /\.(?:mp4|webm)$/i.test(url.pathname)) return;
+
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request)
