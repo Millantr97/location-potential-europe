@@ -25,9 +25,9 @@ const PROFILE={
 COST_CITIES.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=c.name+' ('+c.country+')';citySel.appendChild(o);});
 Object.keys(PROFILE).forEach(k=>{const o=document.createElement('option');o.textContent=k;conSel.appendChild(o);});
 function syncConcept(){const p=PROFILE[conSel.value];sizeIn.value=p.size;document.getElementById('cc-seats').value=p.seats;document.getElementById('cc-stock').value=p.stock;updateProgress();}
-conSel.addEventListener('change',syncConcept);syncConcept();
+conSel.addEventListener('change',syncConcept);
 citySel.value=String(COST_CITIES.findIndex(c=>c.id==='valencia'));const q=new URLSearchParams(location.search);if(q.get('city')){const i=COST_CITIES.findIndex(c=>c.id===q.get('city'));if(i>=0)citySel.value=String(i);}
-const inputs=[...document.querySelectorAll('.cost-studio input,.cost-studio select')];function n(id){return +document.getElementById(id).value||0}function updateProgress(){const filled=inputs.filter(e=>String(e.value).trim()!=='').length;document.getElementById('cc-complete').textContent=Math.round(100*filled/inputs.length)+'%';}inputs.forEach(e=>e.addEventListener('input',updateProgress));updateProgress();
+const inputs=[...document.querySelectorAll('.cost-studio input,.cost-studio select')];function n(id){return +document.getElementById(id).value||0}function updateProgress(){const filled=inputs.filter(e=>String(e.value).trim()!=='').length;document.getElementById('cc-complete').textContent=Math.round(100*filled/inputs.length)+'%';}inputs.forEach(e=>e.addEventListener('input',updateProgress));syncConcept();updateProgress();
 function range(a,b){return [Math.round(Math.min(a,b)),Math.round(Math.max(a,b))]}
 function estimate(){
  const c=COST_CITIES[+citySel.value],p=PROFILE[conSel.value],size=n('cc-size')||p.size,floor=n('cc-floor')||1,days=n('cc-days'),hours=n('cc-hours'),shift=n('cc-shift'),owner=n('cc-owner'),seats=n('cc-seats'),stock=n('cc-stock'),cond=n('cc-condition')||1,fit=n('cc-fit'),equip=n('cc-equipment'),deposit=n('cc-deposit'),feePc=n('cc-fees')/100,contPc=n('cc-contingency')/100;
