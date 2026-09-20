@@ -3,7 +3,7 @@
 ## First build wave
 
 - United States: 8 city configurations. Official ACS 2024 5-year tract tables and TIGER/Line 2024 tract boundaries confirmed available. Data files are fetched at build time and are not committed.
-- Australia: 5 city configurations. Official ABS Census 2021 SA1 General Community Profile packs confirmed available. Data packs are fetched at build time and are not committed.
+- Australia: Sydney is live with 340 scored segments, 6,383 observed commercial units and a 100.0% join to 10,436 ABS Census 2021 SA1 records. Melbourne, Brisbane, Perth and Adelaide remain configured for the next build wave.
 
 ## Held back
 
