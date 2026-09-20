@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Join official ACS 2024 five-year tract context to TIGER centroids."""
 import geopandas as gpd,pandas as pd,json,sys,functools
-state=sys.argv[1]; counties=sys.argv[2].split(','); out=sys.argv[3]; base=sys.argv[4] if len(sys.argv)>4 else '/tmp/usacs'
+state=sys.argv[1]; counties=sys.argv[2].split(','); out=sys.argv[3]; base=sys.argv[4] if len(sys.argv)>4 else '/tmp/usacs'; tractzip=sys.argv[5] if len(sys.argv)>5 else f'{base}/nytract.zip'
 def tab(n):
  x=pd.read_csv(f'{base}/{n}.dat',sep='|',dtype={'GEO_ID':str});return x[x.GEO_ID.str.startswith('1400000US'+state)].set_index('GEO_ID')
 x=functools.reduce(lambda a,b:a.join(b,how='outer'),[tab(t) for t in ('b01003','b09001','b23025','b05002','b15003')])
-g=gpd.read_file(f'zip://{base}/nytract.zip').to_crs(4326);g=g[g.COUNTYFP.isin(counties)].copy();g['GEO_ID']='1400000US'+g.GEOID
+g=gpd.read_file('zip://'+tractzip).to_crs(4326);g=g[g.COUNTYFP.isin(counties)].copy();g['GEO_ID']='1400000US'+g.GEOID
 c=g.geometry.representative_point(); outrows=[]
 for _,r in g.iterrows():
  q=x.loc[r.GEO_ID] if r.GEO_ID in x.index else None
