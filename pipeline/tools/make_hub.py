@@ -1,6 +1,7 @@
+import os
 import json,sys,html
 sys.path.insert(0,'/home/sandbox/europe/work');from cities_eu import CITIES_EU,SHIP
-ROOT='/home/sandbox/europe/repo';SITE='https://millantr97.github.io/location-potential-europe/'
+ROOT='/home/sandbox/europe/repo';SITE=os.environ.get('LP_SITE_BASE','https://millantr97.github.io/location-potential-europe/').rstrip('/')+'/'
 UK=['london','manchester','birmingham','leeds','bristol','liverpool','sheffield','glasgow','edinburgh'];UN={'london':'London','manchester':'Manchester','birmingham':'Birmingham','leeds':'Leeds','bristol':'Bristol','liverpool':'Liverpool','sheffield':'Sheffield','glasgow':'Glasgow','edinburgh':'Edinburgh'}
 counts=json.load(open('/home/sandbox/europe/work/seg_counts.json'));eu=[c for c in SHIP if c not in UK];by={}
 for c in eu:by.setdefault(CITIES_EU[c]['country_name'].title(),[]).append(c)

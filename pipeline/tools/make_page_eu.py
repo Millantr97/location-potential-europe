@@ -1,3 +1,4 @@
+import os
 """Generate repo/<city>/index.html + repo/<city>/city.js for an EU city. Run after emit_eu.py."""
 import json, re, sys, os
 sys.path.insert(0,'/home/sandbox/europe/work')
@@ -6,7 +7,7 @@ from transit_eu import TRANSIT
 cid=sys.argv[1]; C=CITIES_EU[cid]
 ROOT='/home/sandbox/europe/repo'
 TPL='/home/sandbox/london-location-lens/index.html'
-SITE='https://millantr97.github.io/location-potential-europe/'
+SITE=os.environ.get('LP_SITE_BASE','https://millantr97.github.io/location-potential-europe/').rstrip('/')+'/'
 segs=json.load(open(f'{ROOT}/pipeline/eu/{cid}/segments_full2.json'))
 nseg=len(segs); narea=len([s for s in segs if s.get('lvl')!='street']); nstreet=nseg-narea
 t=TRANSIT.get(cid)

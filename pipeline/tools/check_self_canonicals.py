@@ -1,8 +1,9 @@
+import os
 #!/usr/bin/env python3
 """Fail if any city homepage canonical does not self-reference its city URL."""
 from pathlib import Path
 import re, sys
-BASE='https://millantr97.github.io/location-potential-europe/'
+BASE=os.environ.get('LP_SITE_BASE','https://millantr97.github.io/location-potential-europe/').rstrip('/')+'/'
 errors=[]; checked=0
 for page in sorted(Path(__file__).resolve().parents[2].glob('*/index.html')):
     slug=page.parent.name

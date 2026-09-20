@@ -55,7 +55,8 @@ for(const a of ARTICLES){
   }).join('\n');
   function topName(t){const b=t.seg.borough||'';return b&&t.seg.name.indexOf('('+b+')')<0?t.seg.name+' ('+b+')':t.seg.name;}
   const ldItems=top.map((r,i)=>`{"@type": "ListItem", "position": ${i+1}, "name": ${JSON.stringify(r.seg.name)}}`).join(', ');
-  const url='https://millantr97.github.io/location-potential-europe/'+cityId+'/articles/best-streets-'+a.slug+'-'+cityId+'.html';
+  const SITE=(process.env.LP_SITE_BASE||'https://millantr97.github.io/location-potential-europe/').replace(/\/?$/,'/');
+  const url=SITE+cityId+'/articles/best-streets-'+a.slug+'-'+cityId+'.html';
   const html=`<!doctype html>
 <html lang="en">
 <head>
@@ -76,7 +77,7 @@ for(const a of ARTICLES){
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="Data-driven ranking of the 10 best ${cn} streets to open ${esc(a.noun)}: fit scores, modelled revenue, modelled station flows and recorded competition.">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="https://millantr97.github.io/location-potential-europe/assets/og.png">
+<meta property="og:image" content="${SITE}assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../styles.css?v=32">
