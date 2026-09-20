@@ -1,0 +1,16 @@
+{
+  "openapi":"3.1.0",
+  "info":{"title":"Location Potential Static API","version":"1.0.0","description":"Agent-readable site-selection data. Evidence fields remain explicitly labelled OBSERVED, AREA CONTEXT or MODELLED. Static preview only: no SLA, authentication or write operations."},
+  "servers":[{"url":"https://millantr97.github.io/location-potential-europe"}],
+  "paths":{
+    "/api/v1/index.json":{"get":{"operationId":"listCoverage","summary":"List available cities and concept score endpoints","responses":{"200":{"description":"API catalogue","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Catalogue"}}}}}}},
+    "/api/v1/cities/{city}.json":{"get":{"operationId":"getCityZones","summary":"Get zones and evidence inputs for one city","parameters":[{"name":"city","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"City zone dataset","content":{"application/json":{"schema":{"$ref":"#/components/schemas/CityDataset"}}}},"404":{"description":"Unknown city"}}}},
+    "/api/v1/concepts/{concept}.json":{"get":{"operationId":"getConceptScores","summary":"Get published modelled zone rankings for one concept","parameters":[{"name":"concept","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"Concept score dataset"},"404":{"description":"Unknown concept"}}}}
+  },
+  "components":{"schemas":{
+    "EvidenceLabels":{"type":"object","properties":{"observed":{"const":"OBSERVED"},"area_context":{"const":"AREA CONTEXT"},"modelled":{"const":"MODELLED"}}},
+    "Catalogue":{"type":"object","required":["schema_version","cities","concepts","labels"],"properties":{"schema_version":{"type":"string"},"city_count":{"type":"integer"},"zone_count":{"type":"integer"},"labels":{"$ref":"#/components/schemas/EvidenceLabels"},"cities":{"type":"array","items":{"type":"object"}},"concepts":{"type":"array","items":{"type":"object"}}}},
+    "CityDataset":{"type":"object","required":["city","labels","warning","zones"],"properties":{"city":{"type":"object"},"labels":{"type":"object"},"warning":{"type":"string"},"zones":{"type":"array","items":{"$ref":"#/components/schemas/Zone"}}}},
+    "Zone":{"type":"object","required":["id","name","anchor_observed","observed","area_context","modelled"],"properties":{"id":{"type":"string"},"name":{"type":"string"},"area":{"type":["string","null"]},"level":{"type":["string","null"]},"anchor_observed":{"type":"object"},"observed":{"type":"object"},"area_context":{"type":"object"},"modelled":{"type":"object"}}}
+  }}
+}

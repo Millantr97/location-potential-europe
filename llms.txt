@@ -1,0 +1,24 @@
+# Location Potential
+
+> Street-level site-selection data across Europe, the United States and Australia. Use it to shortlist candidate zones for a business concept. Every value keeps one of three evidence labels: OBSERVED, AREA CONTEXT, or MODELLED.
+
+## Start here
+- [Agent and developer guide](https://millantr97.github.io/location-potential-europe/developers/): endpoints, examples, limits and evidence rules
+- [API catalogue](https://millantr97.github.io/location-potential-europe/api/v1/index.json): cities, concepts and endpoint URLs
+- [OpenAPI 3.1 description](https://millantr97.github.io/location-potential-europe/openapi.json): machine-readable API contract
+- [Methodology](https://millantr97.github.io/location-potential-europe/methodology/): scoring and source details
+
+## Static read operations
+- `GET /api/v1/index.json` - discover available cities and concepts
+- `GET /api/v1/cities/{city}.json` - zones and evidence inputs for one city
+- `GET /api/v1/concepts/{concept}.json` - published modelled fit and revenue rankings by concept
+
+## Evidence contract
+- OBSERVED: mapped or recorded source data. It is not a claim of completeness.
+- AREA CONTEXT: official or published statistics around the zone, not a street count.
+- MODELLED: a transparent planning estimate, never an observed outcome.
+- Coordinates are candidate anchors, not premises availability.
+- Verify shortlisted locations, rents, footfall and availability locally before any commitment.
+
+## Current limits
+This is a static, cacheable preview with no API key, uptime SLA or write actions. It cannot accept audit requests or create reports through the API. The website's forms remain the human route for those actions.
