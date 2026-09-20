@@ -1,0 +1,16 @@
+{
+  "US": {
+    "area_context": "ACS 2024 5-year, census tract",
+    "demographic_tables": "https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/data/5YRData/",
+    "boundaries": "https://www2.census.gov/geo/tiger/TIGER2024/TRACT/",
+    "observed_streets_and_competitors": "OpenStreetMap",
+    "currency": "USD"
+  },
+  "AU": {
+    "area_context": "ABS Census 2021 General Community Profile, SA1",
+    "data_packs": "https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_GCP_SA1_for_NSW_short-header.zip",
+    "boundaries": "ABS ASGS Edition 3 SA1",
+    "observed_streets_and_competitors": "OpenStreetMap",
+    "currency": "AUD"
+  }
+}
