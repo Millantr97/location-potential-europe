@@ -1,0 +1,44 @@
+Location Potential selected improvements implementation audit - 20 Sep 2026
+1 Guided quiz: assets/decision-lab.js
+2 Budget-first: quiz startup screen and business planner budget
+4 Guided first visit: home Start Here flow
+5 Beginner-friendly: low-risk evidence-first sorting
+7 Risk score: planner failure-risk screen, explicitly MODELLED
+8 Similar zones: closest twin in planner across rent/residents/flow/fit
+10 Failure side: downside stress and failure-risk screen; no fake closure statistics
+11 Compare finalists: planner 3-card side-by-side
+12 Score confidence: 45% OBSERVED + 30% AREA CONTEXT + 25% model-specification coverage, visible and caveated
+16 Seasonality: comparison flags + owner research guidance
+17 Walk catchment: AREA CONTEXT plus explicit routing limitation
+18 Tourist/local: explicit separation and official-source guidance
+19 Weather: coarse MODELLED sensitivity flag plus inspection caveat
+20 Commuter direction: limitation and on-street count guidance
+21 Break-even: planner
+22 Startup costs: planner fit-out/deposit/editor
+23 Rent/m2: planner from published benchmark
+24 Rent +10%: planner stress test
+25 Staffing: editable planner input and official wage links
+26 Licences: official EU/UK/US/AU sources
+27 Time-to-open: no universal invented timeline; official local sources
+28 Financing: official access-to-finance links
+29 Suppliers: honest verification checklist; no incomplete fake density score
+30 Utilities: quote-based checklist; no domestic proxy
+31 Confidence: same decomposed coverage as #12
+32 Refresh: existing freshness stamps
+33 History: first retained 148-city/60,018-zone baseline; no prior trend invented
+34 Alerts: existing city FormSubmit + manual-delivery disclosure
+36 Dossier: print/save planner
+37 Assumption editor: ticket, margin, costs, fit-out, deposit
+38 What could be wrong: planner and card warnings
+45 Best city: 68 pages under best-city/
+46 Country pages: countries/
+47 Embed badge: existing widget/ surface
+48 Share card: planner PNG canvas download
+49 Multi-language: languages/ + ES/FR/DE city layers
+50 Voice friendly: developer/MCP short labelled response contract
+51 Newsletter: Zone of Week FormSubmit with consent
+52 Questions: manual moderated question form, no fake public comments
+55 Housing: separate decision guidance and official-data reminder
+56 Events: council/destination calendar verification guidance
+59 MCP: code-complete Worker, six tools; deployment blocked pending Cloudflare token/account
+60 Affiliates: global partner page + application links, no fake live placement
