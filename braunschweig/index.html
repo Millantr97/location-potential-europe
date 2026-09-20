@@ -25,7 +25,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Location Potential","url":"https://millantr97.github.io/location-potential-europe/","description":"Street-level site selection and modelled revenue for new business locations in Braunschweig, honestly labelled."}</script>
 <link rel="preconnect" href="https://unpkg.com">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="../styles.css?v=44">
+<link rel="stylesheet" href="../styles.css?v=45">
 </head>
 <body>
 <header class="top">
@@ -49,9 +49,9 @@
   <div>
     <div class="eyebrow">Street-level site selection · Braunschweig, Germany</div>
     <h1>Where should your business open?</h1>
-    <p>Answer the questionnaire below first: ticket, format, hours, audience. The map and the top-20 table update live as you answer, scoring <span id="seg-count">149</span> Braunschweig street segments (switch cities above) plus every recorded commercial unit against your concept, with an estimated monthly revenue for each. Every figure is labelled: observed at that street, area context, or modelled.</p>
+    <p>Choose your business type and priorities. The rankings, map and revenue estimate update as you make changes, so you can compare streets on the factors that matter to you.</p>
     <a class="hero-cta" href="#concept" id="hero-cta">Start with your concept ↓</a>
-    <aside class="truth"><strong>Read the labels, not just the score</strong><p><b class="c-obs">OBSERVED</b> measured at the street or station. <b class="c-ctx">AREA CONTEXT</b> residents or borough statistics around it. <b class="c-mod">MODELLED</b> transparent estimates we compute, with the rule shown. For more accurate models consult a specialist.</p></aside>
+    <aside class="truth"><strong>Know what is measured and what is estimated</strong><p><b class="c-obs">OBSERVED</b> real places and counts. <b class="c-ctx">AREA CONTEXT</b> local population and market data. <b class="c-mod">MODELLED</b> estimates with the assumptions shown.</p></aside>
   </div>
   
 </section>
@@ -60,7 +60,7 @@
   <div class="section-head">
     <div class="eyebrow">Step 1 · Start here</div>
     <h2>Define your concept</h2>
-    <p>Pick one of the <span id="preset-count">68</span> presets or start from scratch, then change anything. The map and the top-20 table update live with every answer.</p>
+    <p>Start with a business type or build your own. You can change the offer, audience, opening hours, budget and priorities at any time.</p>
   </div>
   <div class="preset-row" id="preset-row"></div>
   <div class="concept-grid" id="concept-grid"></div>
@@ -99,12 +99,12 @@
     <div class="section-head">
       <div class="eyebrow">Your workspace · saved on this device</div>
       <h2>Shortlist, compare, track changes</h2>
-      <p>Save streets as favourites, compare up to three side by side, and see what changed in the published data since your last visit. Everything stays on this device.</p>
+      <p>Save streets as favourites, compare up to three side by side and review changes when you return. Your shortlist stays on this device.</p>
     </div>
     <div class="tool-grid">
       <div class="tool-card"><h3>Favourites <span id="fav-count" class="count-badge">0</span></h3><div id="fav-list" class="saved-list"></div></div>
       <div class="tool-card"><h3>Compare streets <span id="compare-count" class="count-badge">0/3</span></h3><div id="compare-list" class="saved-list"></div><button id="open-compare" class="action primary" disabled>Compare side by side</button></div>
-      <div class="tool-card"><h3>Change alerts</h3><p class="tool-copy">Favourites are checked against the latest published dataset whenever you return. If a competitor count, flow anchor or modelled score changes, you will see exactly what changed here.</p><div id="alert-list" class="saved-list"></div><p class="micro">ON-VISIT CHECK · A server is required for email or push alerts while this page is closed.</p></div>
+      <div class="tool-card"><h3>Change alerts</h3><p class="tool-copy">When you return, we compare your favourites with the latest data and show any changes to competitors, movement or score.</p><div id="alert-list" class="saved-list"></div><p class="micro">Updates appear here when you return.</p></div>
     </div>
     <div id="compare-panel" class="compare-panel" hidden></div>
   </div>
@@ -220,7 +220,7 @@
 <section class="cta-wrap" id="sponsored"><div class="model-cta"><b>Sponsored · Expert help in Braunschweig</b><span>This slot is reserved for one local specialist in Braunschweig. It is paid placement, always labelled, and never part of the data or the scores.</span><a href="../partners/#expert-slot">About this slot &rarr;</a></div></section>
 </main>
 
-<div class="freshness city-freshness">Data updated <span data-built>from the published dataset</span> · interface updated 20 September 2026</div>
+<div class="freshness city-freshness">Location data <span data-built>updated regularly</span> · checked 20 September 2026</div>
 <footer class="foot">
   <div>Location Potential · London · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and a licensing check before signing anything. A specialist can help you.</div><div class="foot-links"><a href="#rankings" data-goto="rankings">Rankings &amp; guides</a><a href="#expert" data-expert>Expert geomarketing</a><a href="../cost-calculator/?city=braunschweig">Cost of opening</a><a href="../guides/germany/">Licences: Germany</a><a href="../report/">Market entry report</a><a href="../audit/">Free mini-audit</a><a href="../privacy.html">Privacy Notice</a></div>
 </footer>
