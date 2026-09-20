@@ -1,0 +1,453 @@
+{
+  "baseline_date": "2026-09-20",
+  "status": "first retained baseline",
+  "warning": "No earlier comparable snapshots are retained. Trend claims begin only after the next published rebake.",
+  "city_count": 148,
+  "zone_count": 60018,
+  "cities": {
+    "a-coruna": {
+      "zone_count": 235
+    },
+    "aachen": {
+      "zone_count": 235
+    },
+    "adelaide": {
+      "zone_count": 139
+    },
+    "alicante": {
+      "zone_count": 133
+    },
+    "amsterdam": {
+      "zone_count": 763
+    },
+    "antwerp": {
+      "zone_count": 323
+    },
+    "athens": {
+      "zone_count": 1232
+    },
+    "augsburg": {
+      "zone_count": 192
+    },
+    "barcelona": {
+      "zone_count": 1290
+    },
+    "bari": {
+      "zone_count": 165
+    },
+    "basel": {
+      "zone_count": 150
+    },
+    "bergamo": {
+      "zone_count": 204
+    },
+    "berlin": {
+      "zone_count": 1695
+    },
+    "bialystok": {
+      "zone_count": 134
+    },
+    "bielefeld": {
+      "zone_count": 195
+    },
+    "bilbao": {
+      "zone_count": 494
+    },
+    "uk-birmingham": {
+      "zone_count": 378
+    },
+    "bochum": {
+      "zone_count": 535
+    },
+    "bologna": {
+      "zone_count": 266
+    },
+    "bonn": {
+      "zone_count": 363
+    },
+    "bordeaux": {
+      "zone_count": 293
+    },
+    "boston": {
+      "zone_count": 209
+    },
+    "brasov": {
+      "zone_count": 100
+    },
+    "bratislava": {
+      "zone_count": 290
+    },
+    "braunschweig": {
+      "zone_count": 149
+    },
+    "brisbane": {
+      "zone_count": 207
+    },
+    "uk-bristol": {
+      "zone_count": 170
+    },
+    "brno": {
+      "zone_count": 259
+    },
+    "brussels": {
+      "zone_count": 716
+    },
+    "bucharest": {
+      "zone_count": 555
+    },
+    "budapest": {
+      "zone_count": 1101
+    },
+    "bydgoszcz": {
+      "zone_count": 89
+    },
+    "catania": {
+      "zone_count": 141
+    },
+    "chicago": {
+      "zone_count": 466
+    },
+    "cluj-napoca": {
+      "zone_count": 136
+    },
+    "cologne": {
+      "zone_count": 709
+    },
+    "constanta": {
+      "zone_count": 63
+    },
+    "copenhagen": {
+      "zone_count": 535
+    },
+    "cordoba": {
+      "zone_count": 50
+    },
+    "craiova": {
+      "zone_count": 70
+    },
+    "dublin": {
+      "zone_count": 517
+    },
+    "dusseldorf": {
+      "zone_count": 831
+    },
+    "uk-edinburgh": {
+      "zone_count": 249
+    },
+    "eindhoven": {
+      "zone_count": 186
+    },
+    "espoo": {
+      "zone_count": 61
+    },
+    "florence": {
+      "zone_count": 275
+    },
+    "frankfurt": {
+      "zone_count": 814
+    },
+    "gdansk": {
+      "zone_count": 296
+    },
+    "gelsenkirchen": {
+      "zone_count": 531
+    },
+    "geneva": {
+      "zone_count": 178
+    },
+    "gent": {
+      "zone_count": 290
+    },
+    "gijon": {
+      "zone_count": 134
+    },
+    "uk-glasgow": {
+      "zone_count": 331
+    },
+    "gothenburg": {
+      "zone_count": 173
+    },
+    "granada": {
+      "zone_count": 168
+    },
+    "grenoble": {
+      "zone_count": 221
+    },
+    "haarlem": {
+      "zone_count": 169
+    },
+    "hamburg": {
+      "zone_count": 714
+    },
+    "helsinki": {
+      "zone_count": 483
+    },
+    "iasi": {
+      "zone_count": 70
+    },
+    "karlsruhe": {
+      "zone_count": 278
+    },
+    "katowice": {
+      "zone_count": 447
+    },
+    "kaunas": {
+      "zone_count": 76
+    },
+    "kiel": {
+      "zone_count": 135
+    },
+    "krakow": {
+      "zone_count": 411
+    },
+    "las-palmas-de-gran-canaria": {
+      "zone_count": 183
+    },
+    "lausanne": {
+      "zone_count": 302
+    },
+    "uk-leeds": {
+      "zone_count": 313
+    },
+    "leiden": {
+      "zone_count": 212
+    },
+    "leipzig": {
+      "zone_count": 286
+    },
+    "liege": {
+      "zone_count": 196
+    },
+    "lille": {
+      "zone_count": 378
+    },
+    "lisbon": {
+      "zone_count": 1000
+    },
+    "uk-liverpool": {
+      "zone_count": 164
+    },
+    "ljubljana": {
+      "zone_count": 131
+    },
+    "uk-london": {
+      "zone_count": 2480
+    },
+    "los-angeles": {
+      "zone_count": 332
+    },
+    "lublin": {
+      "zone_count": 111
+    },
+    "luxembourg": {
+      "zone_count": 154
+    },
+    "lyon": {
+      "zone_count": 665
+    },
+    "madrid": {
+      "zone_count": 1734
+    },
+    "malaga": {
+      "zone_count": 245
+    },
+    "malmo": {
+      "zone_count": 105
+    },
+    "uk-manchester": {
+      "zone_count": 444
+    },
+    "mannheim": {
+      "zone_count": 323
+    },
+    "marseille": {
+      "zone_count": 426
+    },
+    "melbourne": {
+      "zone_count": 373
+    },
+    "milan": {
+      "zone_count": 1401
+    },
+    "monchengladbach": {
+      "zone_count": 213
+    },
+    "montpellier": {
+      "zone_count": 252
+    },
+    "munich": {
+      "zone_count": 1064
+    },
+    "munster": {
+      "zone_count": 142
+    },
+    "nantes": {
+      "zone_count": 244
+    },
+    "naples": {
+      "zone_count": 617
+    },
+    "new-york": {
+      "zone_count": 1156
+    },
+    "nice": {
+      "zone_count": 406
+    },
+    "oslo": {
+      "zone_count": 376
+    },
+    "ostrava": {
+      "zone_count": 111
+    },
+    "palma-de-mallorca": {
+      "zone_count": 167
+    },
+    "pamplona": {
+      "zone_count": 56
+    },
+    "paris": {
+      "zone_count": 4155
+    },
+    "perth": {
+      "zone_count": 134
+    },
+    "plovdiv": {
+      "zone_count": 103
+    },
+    "porto": {
+      "zone_count": 524
+    },
+    "prague": {
+      "zone_count": 693
+    },
+    "rennes": {
+      "zone_count": 222
+    },
+    "riga": {
+      "zone_count": 384
+    },
+    "rome": {
+      "zone_count": 918
+    },
+    "rotterdam": {
+      "zone_count": 511
+    },
+    "rouen": {
+      "zone_count": 159
+    },
+    "sabadell": {
+      "zone_count": 192
+    },
+    "san-francisco": {
+      "zone_count": 198
+    },
+    "san-sebastian": {
+      "zone_count": 237
+    },
+    "santa-cruz-de-tenerife": {
+      "zone_count": 92
+    },
+    "seattle": {
+      "zone_count": 177
+    },
+    "seville": {
+      "zone_count": 267
+    },
+    "uk-sheffield": {
+      "zone_count": 158
+    },
+    "sintra": {
+      "zone_count": 147
+    },
+    "sofia": {
+      "zone_count": 853
+    },
+    "stockholm": {
+      "zone_count": 675
+    },
+    "strasbourg": {
+      "zone_count": 184
+    },
+    "stuttgart": {
+      "zone_count": 772
+    },
+    "sydney": {
+      "zone_count": 340
+    },
+    "szczecin": {
+      "zone_count": 174
+    },
+    "tallinn": {
+      "zone_count": 226
+    },
+    "tampere": {
+      "zone_count": 121
+    },
+    "the-hague": {
+      "zone_count": 475
+    },
+    "timisoara": {
+      "zone_count": 85
+    },
+    "toulouse": {
+      "zone_count": 374
+    },
+    "trondheim": {
+      "zone_count": 56
+    },
+    "turin": {
+      "zone_count": 477
+    },
+    "utrecht": {
+      "zone_count": 331
+    },
+    "valencia": {
+      "zone_count": 322
+    },
+    "valladolid": {
+      "zone_count": 119
+    },
+    "valletta": {
+      "zone_count": 130
+    },
+    "varna": {
+      "zone_count": 97
+    },
+    "verona": {
+      "zone_count": 143
+    },
+    "vienna": {
+      "zone_count": 1049
+    },
+    "vigo": {
+      "zone_count": 108
+    },
+    "vilnius": {
+      "zone_count": 197
+    },
+    "vitoria-gasteiz": {
+      "zone_count": 80
+    },
+    "warsaw": {
+      "zone_count": 1176
+    },
+    "washington-dc": {
+      "zone_count": 140
+    },
+    "wiesbaden": {
+      "zone_count": 197
+    },
+    "wuppertal": {
+      "zone_count": 276
+    },
+    "zagreb": {
+      "zone_count": 284
+    },
+    "zaragoza": {
+      "zone_count": 252
+    },
+    "zurich": {
+      "zone_count": 805
+    }
+  }
+}
