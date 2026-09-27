@@ -23,9 +23,9 @@
      Gumroad setup: gumroad.com -> New product -> Digital product (PDF) -> price 149 EUR -> paste product URL here.
      Lemon Squeezy: app.lemonsqueezy.com -> Products -> New -> price 149 EUR -> paste checkout URL here. -->
 <section id="report-enquiry" class="alerts-panel" style="margin:24px 0" aria-labelledby="report-enquiry-title"><div>
-<h2 id="report-enquiry-title">Paid report enquiry</h2>
+<style>#report-form label:not(.digest-check){display:grid;gap:6px;font-weight:700;font-size:13px}#report-form input:not([type=checkbox]),#report-form textarea{display:block;width:100%;min-width:0;box-sizing:border-box;padding:10px 12px;border:1px solid #b8c4bb;border-radius:8px;font:inherit;background:#fff;color:#10251f}#report-form textarea{resize:vertical;min-height:110px}#report-enquiry{scroll-margin-top:90px}</style><h2 id="report-enquiry-title">Paid report enquiry</h2>
 <p>This is separate from the free mini-audit. The full report costs €149 for one city and one concept; a second concept in the same city costs €49. There is no online checkout yet. Submit an enquiry to discuss the report. Payment and delivery are arranged separately; sending this form does not place an order.</p>
-<form id="report-form" action="https://formsubmit.co/ajax/amazonmillan9@gmail.com" method="POST">
+<form id="report-form" style="display:grid;gap:14px" action="https://formsubmit.co/ajax/amazonmillan9@gmail.com" method="POST">
 <input type="hidden" name="_subject" value="Location Potential Europe report request">
 <input type="hidden" name="_captcha" value="false">
 <input type="hidden" name="source" value="Location Potential Europe report page">
@@ -33,8 +33,8 @@
 <label>Your email<input required type="email" name="email" autocomplete="email"></label>
 <label>Company or agency<input name="company" autocomplete="organization" placeholder="Optional"></label>
 <label>City of interest<input required name="city" placeholder="e.g. Madrid"></label>
-<label>Message<textarea required name="message" rows="3" placeholder="Tell us the business concept and what you need the report to answer."></textarea></label>
-<label class="digest-check"><input required type="checkbox" name="consent" value="yes"> I agree to be contacted by email about this report enquiry.</label>
+<label>Message<textarea required name="message" rows="4" placeholder="Tell us the business concept and what you need the report to answer."></textarea></label>
+<label class="digest-check" style="display:flex;align-items:flex-start;gap:8px"><input required type="checkbox" name="consent" value="yes" style="width:auto;flex:none"> I agree to be contacted by email about this report enquiry.</label>
 <button class="action primary" type="submit">Send report enquiry</button>
 <p class="form-legal">By submitting, you confirm you have read the <a href="../privacy.html">Privacy Notice</a>. Your request is sent through our form provider for entry in the Reports list and an email notification. No payment is taken here.</p>
 <p id="report-status" class="form-status" role="status" aria-live="polite"></p>
