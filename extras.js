@@ -22,11 +22,16 @@ function trendChange(series,years,back){
 function fmtChg(v){if(v==null)return "n/a";const s=v>=0?"+":"";return `<span class="chg ${v>=0?"up":"down"}">${s}${v.toFixed(0)}%</span>`;}
 function renderTrends(){
   const box=$("trend-list");if(!box)return;
-  if(typeof TRENDS==="undefined"||!TRENDS||!TRENDS.osm){box.innerHTML='<div class="saved-empty">Trend series are being assembled from the sources below. Check back shortly.</div>';return;}
-  const years=TRENDS.years, gtyears=TRENDS.gt_years;
+  // Concept-level search interest is a reference series, not city-level demand.
+  // The city's own OSM supply appears only when a measured snapshot exists.
+  const trendData=window.LPE_CONCEPT_TRENDS;
+  if(!trendData||!trendData.gt||!trendData.gt.series){box.innerHTML='<div class="saved-empty">Search-interest series is unavailable right now. The city scores and map remain available.</div>';return;}
+  const citySupply=(typeof TRENDS!=="undefined"&&TRENDS&&TRENDS.osm)?TRENDS.osm:null;
+  const years=(typeof TRENDS!=="undefined"&&TRENDS&&TRENDS.years)||[], gtyears=trendData.gt_years;
+
   let rows=PRESETS.map(p=>{
-    const osm=TRENDS.osm[p.cat]||null;
-    const gt=(TRENDS.gt&&TRENDS.gt.series)?TRENDS.gt.series[p.id]:null;
+    const osm=citySupply?citySupply[p.cat]||null:null;
+    const gt=(trendData.gt&&trendData.gt.series)?trendData.gt.series[p.id]:null;
     const gtMax=gt?Math.max(...Object.values(gt)):0;
     const lowVol=gt&&gtMax<3;
     return {p,osm,gt,gtChg:lowVol?null:trendChange(gt,gtyears,1),lowVol};
@@ -34,16 +39,16 @@ function renderTrends(){
   const q=trendQuery.trim().toLowerCase();
   if(q)rows=rows.filter(r=>r.p.name.toLowerCase().includes(q)
     ||(XCAT[r.p.cat]||"").toLowerCase().includes(q)
-    ||(((TRENDS.gt&&TRENDS.gt.kw&&TRENDS.gt.kw[r.p.id])||"").toLowerCase().includes(q)));
+    ||(((trendData.gt&&trendData.gt.kw&&trendData.gt.kw[r.p.id])||"").toLowerCase().includes(q)));
   if(trendSort==="growth")rows.sort((a,b)=>((b.gtChg??-999))-((a.gtChg??-999)));
   else rows.sort((a,b)=>a.p.name.localeCompare(b.p.name));
   const total=rows.length, pages=Math.max(1,Math.ceil(total/TREND_PAGE));
   if(trendPage>pages)trendPage=pages; if(trendPage<1)trendPage=1;
   const slice=rows.slice((trendPage-1)*TREND_PAGE, trendPage*TREND_PAGE);
   box.innerHTML=slice.map(r=>{
-    const kw=(TRENDS.gt&&TRENDS.gt.kw&&TRENDS.gt.kw[r.p.id])||r.p.name;
-    const osmNow=r.osm?Math.round(r.osm[years[years.length-1]]):null;
-    const gtNums=r.gt?`index <b>${Math.round(r.gt[gtyears[0]])}</b> → <b>${Math.round(r.gt[gtyears[gtyears.length-1]])}</b> · Google Trends, ${TRENDS.gt.geo} - estimated attention`:"no search series";
+    const kw=(trendData.gt&&trendData.gt.kw&&trendData.gt.kw[r.p.id])||r.p.name;
+    const osmNow=r.osm && years.length && Number.isFinite(r.osm[years[years.length-1]]) ? Math.round(r.osm[years[years.length-1]]) : null;
+    const gtNums=r.gt?`index <b>${Math.round(r.gt[gtyears[0]])}</b> → <b>${Math.round(r.gt[gtyears[gtyears.length-1]])}</b> · Google Trends, ${trendData.gt.geo} - estimated attention; not a ${CITY.name} measurement`:"no search series";
     const gtState=r.lowVol?'<span class="tr-nodata">low search volume</span>':`${fmtChg(r.gtChg)} <span class="tr-per">1y</span>`;
     return `<div class="trend-card">
       <div class="tc-head"><div><b>${r.p.name}</b><span class="tr-cat">${XCAT[r.p.cat]||r.p.cat}</span></div><button class="mini tc-try" data-try="${r.p.id}">Try it →</button></div>
@@ -52,11 +57,11 @@ function renderTrends(){
         <div class="tc-chart">${sparkline(r.gt,gtyears,240,40)}</div>
         <div class="tc-nums">${r.lowVol?gtNums+" · low search volume - index too small to read":gtNums}</div>
       </div>
-      <div class="tc-cell">
+      ${osmNow!=null?`<div class="tc-cell">
         <div class="tc-label"><span>Recorded supply today, ${CITY.name} ${chipFor("obs")}</span></div>
-        <div class="tc-nums">${osmNow!=null?`<b>${fmt(osmNow)}</b> venues recorded today · all ${(XCAT[r.p.cat]||"").toLowerCase()} (category level, OpenStreetMap)`:"no venue count for this category"}</div>
+        <div class="tc-nums"><b>${fmt(osmNow)}</b> venues recorded today · all ${(XCAT[r.p.cat]||"").toLowerCase()} (category level, OpenStreetMap)</div>
         <div class="tc-nums tr-note">No venue history shown: mapped coverage grew faster than any real market, so old counts measured mapping, not openings.</div>
-      </div>
+      </div>`:""}
     </div>`;
   }).join("")||'<div class="saved-empty" style="grid-column:1/-1">No concept matches that search. Try another word.</div>';
   const pg=$("trend-pages");
@@ -196,7 +201,18 @@ function runStress(){
 (function initExtras(){
   const ts=$("trend-sort");if(ts)ts.onchange=()=>{trendSort=ts.value;trendPage=1;renderTrends();};
   const tq=$("trend-search");if(tq)tq.oninput=()=>{trendQuery=tq.value;trendPage=1;renderTrends();};
+  const trendIntro=$("trends")?.querySelector(".trend-feature-head p");
+  if(trendIntro)trendIntro.textContent="Search interest for each concept uses a United Kingdom Google Trends reference series (2021-2026), not local demand in "+CITY.name+". A recorded venue-supply snapshot appears only when available for this city. Sort or search concepts to explore the reference series.";
+  const trendNote=$("trends")?.querySelector(".trend-note");
+  if(trendNote)trendNote.textContent="Reference only: the Google Trends series measures relative search interest for matching keywords in the United Kingdom, 2021-2026. It is not city-level demand or sales. A city-specific OpenStreetMap venue count is shown only when available; missing counts are omitted rather than treated as zero. The site's modelled city scores use their own evidence chain.";
   renderTrends();
+  if(!window.LPE_CONCEPT_TRENDS){
+    const reference=document.createElement("script");
+    reference.src=(window.LPE_BASE||"../")+"assets/concept-trends-reference.js?v=1";
+    reference.onload=renderTrends;
+    reference.onerror=()=>{const box=$("trend-list");if(box)box.innerHTML='<div class="saved-empty">Search-interest series is temporarily unavailable.</div>';};
+    document.head.appendChild(reference);
+  }
   const gs=$("gap-seg");if(gs){gs.innerHTML=segOptions();$("gap-run").onclick=runGapFinder;}
   const is_=$("inv-seg");if(is_){is_.innerHTML=segOptions();$("inv-run").onclick=runInverse;}
   const ss=$("stress-seg");if(ss){ss.innerHTML=segOptions();$("stress-run").onclick=runStress;
