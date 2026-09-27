@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-title" content="Location Potential">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="../assets/icons/apple-touch-icon.png">
-<title>Location Potential - London</title>
-<meta name="description" content="Where should your business open? Compare street segments and commercial units for your exact concept in London, Manchester, Birmingham, Leeds, Bristol, Liverpool, Sheffield, Glasgow and Edinburgh: real station flows, competition, residents, rents and estimated monthly revenue.">
+<title>Location Potential - Gijón</title>
+<meta name="description" content="Where should your business open in Gijón? Compare scored streets and areas for your concept, with clearly labelled modelled flows and revenue, recorded competition, residents and rent context.">
 <link rel="canonical" href="https://millantr97.github.io/location-potential-europe/gijon/">
 <link rel="alternate" hreflang="en" href="https://millantr97.github.io/location-potential-europe/gijon/">
 <link rel="alternate" hreflang="es" href="https://millantr97.github.io/location-potential-europe/gijon/es/">
@@ -20,7 +20,7 @@
 <meta property="og:site_name" content="Location Potential">
 <meta property="og:title" content="Location Potential - Gijón: where should your business open?">
 <meta property="og:description" content="Street-level site selection in Gijón: station flows, recorded competition, residents, rents and modelled monthly revenue, honestly labelled.">
-<meta property="og:url" content="https://millantr97.github.io/location-potential-europe/london/">
+<meta property="og:url" content="https://millantr97.github.io/location-potential-europe/gijon/">
 <meta property="og:image" content="https://millantr97.github.io/location-potential-europe/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -32,7 +32,7 @@
 <body>
 <header class="top">
   <div class="top-row">
-    <a class="brand" href="../" aria-label="Location Potential home">Location <span>Potential</span><i class="brand-city">London</i><span class="lang-switch"><b>EN</b><a href="es/">ES</a></span></div></a>
+    <a class="brand" href="../" aria-label="Location Potential home">Location <span>Potential</span><i class="brand-city">Gijón</i><span class="lang-switch"><b>EN</b><a href="es/">ES</a></span></div></a>
     <nav class="citynav" id="citynav" aria-label="Cities"></nav>
     <nav class="tabs" id="tabbar" aria-label="Sections">
       <a href="#concept" data-tab="concept" class="on">Concept</a>
@@ -160,7 +160,7 @@
     </div>
     <div class="tool-card prem-card premises-tool"><div class="tool-kicker"><span>02</span> Premises-first analysis</div><h3>I already have premises</h3>
       <p class="tool-copy">Start with the site you have. Add its address, size and rent to rank the concepts that fit it best.</p>
-      <label class="prem-field"><span>Address</span><input id="inv-addr" class="prem-input" placeholder="e.g. 114 Curtain Road, London"></label>
+      <label class="prem-field"><span>Address</span><input id="inv-addr" class="prem-input" placeholder="e.g. a street in Gijón"></label>
       <div class="prem-2col"><label class="prem-field"><span>Size</span><div class="input-unit"><input id="inv-size" class="prem-input" type="number" value="70" min="10" step="5"><i>m²</i></div></label><label class="prem-field"><span>Annual rent</span><div class="input-unit"><input id="inv-rent" class="prem-input" type="number" value="600" min="50" step="10"><i>€/m²</i></div></label></div>
       <label class="prem-field prem-fallback"><span>Fallback street if the address cannot be found</span><select id="inv-seg" class="prem-select"></select></label>
       <button id="inv-run" class="action primary tool-run">Rank the best concepts <span>→</span></button>
@@ -202,7 +202,7 @@
       <input type="hidden" name="_subject" value="Qualified Location Potential geomarketing lead">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="source" value="Location Potential London expert brief">
+      <input type="hidden" name="source" value="Location Potential Gijón expert brief">
       <div class="form-head"><span class="form-step">Your brief</span><b>Usually 2 minutes</b></div>
       <label>Full name<input required autocomplete="name" name="name" placeholder="Your name"></label>
       <div class="form-two"><label>Email<input required type="email" autocomplete="email" name="email" placeholder="you@company.com"></label><label>Phone<input required type="tel" autocomplete="tel" name="phone" placeholder="+44..."></label></div>
@@ -224,12 +224,13 @@
 
 <div class="freshness city-freshness">Location data <span data-built>updated regularly</span> · checked 20 September 2026</div>
 <footer class="foot">
-  <div>Location Potential · London · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and a licensing check before signing anything. A specialist can help you.</div><div class="foot-links"><a href="#rankings" data-goto="rankings">Rankings &amp; guides</a><a href="#expert" data-expert>Expert geomarketing</a><a href="../cost-calculator/?city=gijon">Cost of opening</a><a href="../guides/spain/">Licences: Spain</a><a href="../report/">Market entry report</a><a href="../audit/">Free mini-audit</a><a href="../privacy.html">Privacy Notice</a></div>
+  <div>Location Potential · Gijón · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and a licensing check before signing anything. A specialist can help you.</div><div class="foot-links"><a href="#rankings" data-goto="rankings">Rankings &amp; guides</a><a href="#expert" data-expert>Expert geomarketing</a><a href="../cost-calculator/?city=gijon">Cost of opening</a><a href="../guides/spain/">Licences: Spain</a><a href="../report/">Market entry report</a><a href="../audit/">Free mini-audit</a><a href="../privacy.html">Privacy Notice</a></div>
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="../assets/europe-land.js?v=1"></script>
 <script src="../cities.js?v=11"></script>
+<script src="city.js?v=1"></script>
 <script src="data/segments.js?v=13"></script>
 <script src="data/units.js?v=13"></script>
 <script src="data/competitors.js?v=13"></script>
