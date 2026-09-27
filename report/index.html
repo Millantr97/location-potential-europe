@@ -16,12 +16,30 @@
 <p class="honesty">It is not a valuation, a lease negotiation, or proof that premises are available. Every estimate is a model output on public data, built to shortlist - the same honesty standard as the public tool. If the data for a city is thin, the report says so and shows where.</p>
 <h2>Price and delivery</h2>
 <p><b>&euro;149 per report</b> (one city, one concept, PDF, delivered by email within 3 working days). A second concept on the same city is &euro;49.</p>
-<div class="cta-wrap"><div class="model-cta"><b>Checkout is being connected</b><span>Online payment goes live shortly. Until then, order by email: send the city, the concept and any context, and the report is delivered to your inbox.</span><a href="../audit/?report=1">Order a report by email &rarr;</a></div></div>
+<div class="cta-wrap"><div class="model-cta"><b>Checkout is being connected</b><span>Online payment goes live shortly. The report is separate from the free mini-audit. Send a paid-report enquiry below. You are not placing an order or making a payment yet.</span><a href="#report-enquiry">Request a paid report &rarr;</a></div></div>
 <!-- TODO(Millan): paste the Gumroad or Lemon Squeezy product URL below to enable self-serve checkout.
      Replace the cta-wrap block above with:
      <p><a class="action primary" href="https://YOUR-GUMROAD-OR-LEMONSQUEEZY-URL">Buy the report - EUR 149</a></p>
      Gumroad setup: gumroad.com -> New product -> Digital product (PDF) -> price 149 EUR -> paste product URL here.
      Lemon Squeezy: app.lemonsqueezy.com -> Products -> New -> price 149 EUR -> paste checkout URL here. -->
+<section id="report-enquiry" class="alerts-panel" style="margin:24px 0" aria-labelledby="report-enquiry-title"><div>
+<h2 id="report-enquiry-title">Paid report enquiry</h2>
+<p>This is separate from the free mini-audit. The full report costs €149 for one city and one concept; a second concept in the same city costs €49. There is no online checkout yet. Submit an enquiry to discuss the report. Payment and delivery are arranged separately; sending this form does not place an order.</p>
+<form id="report-form" action="https://formsubmit.co/ajax/amazonmillan9@gmail.com" method="POST">
+<input type="hidden" name="_subject" value="Location Potential Europe report request">
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="source" value="Location Potential Europe report page">
+<label>Full name<input required name="name" autocomplete="name"></label>
+<label>Your email<input required type="email" name="email" autocomplete="email"></label>
+<label>Company or agency<input name="company" autocomplete="organization" placeholder="Optional"></label>
+<label>City of interest<input required name="city" placeholder="e.g. Madrid"></label>
+<label>Message<textarea required name="message" rows="3" placeholder="Tell us the business concept and what you need the report to answer."></textarea></label>
+<label class="digest-check"><input required type="checkbox" name="consent" value="yes"> I agree to be contacted by email about this report enquiry.</label>
+<button class="action primary" type="submit">Send report enquiry</button>
+<p class="form-legal">By submitting, you confirm you have read the <a href="../privacy.html">Privacy Notice</a>. Your request is sent through our form provider for entry in the Reports list and an email notification. No payment is taken here.</p>
+<p id="report-status" class="form-status" role="status" aria-live="polite"></p>
+</form></div></section>
+<script>document.addEventListener('DOMContentLoaded',()=>{const f=document.getElementById('report-form');f.addEventListener('submit',async e=>{e.preventDefault();const st=document.getElementById('report-status'),b=f.querySelector('button[type=submit]');b.disabled=true;st.textContent='Sending...';try{const r=await fetch(f.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(f)});if(!r.ok)throw new Error('Request failed');st.textContent='Enquiry received. We will contact you about the report.';f.reset();}catch(_){st.textContent='Could not send your enquiry. Please try again.';}b.disabled=false;});});</script>
 <h2>Report template</h2>
 <p>Every report follows the same structure as the table above. The worked examples on the <a href="../methodology/">methodology page</a> show the evidence chain with real city data, and the <a href="../zone-of-the-week/">zone of the week</a> shows the depth of a single-zone read.</p>
 </main><footer class="foot hub-wrap"><div>Location Potential · Global · a decision-support tool. Verify any shortlist with on-street counts, agent enquiries and licensing checks.</div><div class="foot-links"><a href="../">Home</a><a href="../methodology/">Methodology</a><a href="../developers/">Data API</a><a href="../privacy.html">Privacy Notice</a></div></footer><div class="freshness">Data updated 17 September 2026 · interface updated 20 September 2026</div><script src="../pwa.js?v=2"></script></body></html>
