@@ -1,19 +1,8 @@
 /* ---------- tab navigation ---------- */
 (function(){
   const NAMES=["concept","detail","trends","opportunity","method","rankings","expert"];
-  // Persistent overview uses the site's existing film still, outside tab panels.
-  const panels=document.getElementById("panels");
-  if(panels && !document.getElementById("city-overview")){
-    const overview=document.createElement("figure");
-    overview.id="city-overview";
-    overview.className="city-overview";
-    const image=document.createElement("img");
-    image.src="../media/see-location-potential-poster.jpg";
-    image.alt="Location Potential film still showing a local coffee business";
-    image.loading="eager";
-    overview.appendChild(image);
-    panels.prepend(overview);
-  }
+  // If a prior cached version added the film still, do not retain it.
+  document.getElementById("city-overview")?.remove();
   let current="concept";
   window.activateTab=function(name,opts){
     if(NAMES.indexOf(name)<0)name="concept";
