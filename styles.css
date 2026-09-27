@@ -589,3 +589,6 @@ footer.hub-wrap{margin-top:44px;padding-top:20px;padding-bottom:30px;border-top:
 
 /* City-wide film still remains visible above the section panels. */
 .city-overview{max-width:1440px;margin:0 auto;padding:14px 24px 0}.city-overview img{display:block;width:100%;height:180px;object-fit:cover;object-position:center 55%;border-radius:16px}@media(max-width:700px){.city-overview{padding:12px 14px 0}.city-overview img{height:110px}}
+
+/* City Concept shortcuts from the opening viewport. */
+.city-concept-shortcuts{margin:14px 0 17px;padding:13px 15px;background:#e8efdf;border:1px solid #ccddba;border-radius:13px}.city-concept-shortcuts strong{font-size:12px;letter-spacing:.02em}.city-concept-shortcuts>div{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.city-concept-shortcuts a{display:inline-block;border-radius:999px;background:#fff;color:var(--ink);border:1px solid #bdcfc0;padding:7px 11px;font-size:12px;font-weight:800;text-decoration:none}.city-concept-shortcuts a:hover,.city-concept-shortcuts a:focus-visible{background:var(--ink);color:var(--lime)}#city-concepts{scroll-margin-top:80px}
