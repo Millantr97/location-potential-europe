@@ -12,7 +12,7 @@ const COUNTRIES=[...new Set(ALL.map(c=>c.country))].sort();
 const FEATURED=['uk-london','new-york','los-angeles','chicago','sydney','melbourne','madrid','paris','berlin','rome','barcelona','singapore'].filter(id=>ALL.some(c=>c.id===id));
 const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase();
 const scope={regions:new Set(),countries:new Set(),cities:new Set(),all:true};
-let conceptId=null,zonesCache={},drawMode=false,drawPoly=null,lasso=null,suppressUrl=false;
+let conceptId=null,zonesCache={},drawMode=false,drawPoly=null,lasso=null,suppressUrl=false,pendingResultReveal=false;
 
 /* concept picker mirrors the city pages: 9 most compact presets up front, the rest behind "See more concepts" */
 const CONCEPTS=window.COMPARE_CONCEPTS;
@@ -109,7 +109,7 @@ function renderConcepts(){
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{
     if(b.dataset.f){conceptFilter=b.dataset.f;renderConcepts();return;}
     if(b.dataset.p==='__more'){conceptsExpanded=!conceptsExpanded;if(!conceptsExpanded)conceptFilter="all";renderConcepts();return;}
-    conceptId=b.dataset.c;renderAll();loadResults();
+    conceptId=b.dataset.c;pendingResultReveal=true;renderAll();loadResults();
   });
 }
 function loadResults(){
@@ -126,6 +126,7 @@ function renderResults(){
   const ranked=zones.slice().sort((a,b)=>b.e-a.e).slice(0,20),meta=id=>ALL.find(c=>c.url===id+'/');
   out.innerHTML=`<h3>Best zones for “${p.name}” across ${scopeLabel()}</h3><div class="hub-note">Ranked by modelled monthly revenue converted to EUR at ECB reference rates (${window.FX_DATE}) for comparability only - local currency is shown too and stays canonical. Every figure MODELLED; open the city page for the full input breakdown. Fit score is computed within each city.</div><div class="cmp-list" role="list">${ranked.map((z,i)=>{const c=meta(z.c);return `<a role="listitem" class="cmp-row ${i===0?'top-result':''}" href="${window.LPE_BASE}${z.c}/?concept=${conceptId}"><span class="cmp-rank">${i+1}</span><span class="cmp-main"><b>${z.n}</b><span class="cmp-city">${c.name}, ${c.country} · fit ${z.s}/100</span></span><span class="cmp-rev"><b>${eurFmt(z.e)}/mo</b><span class="cmp-local">${c.cur}${z.r.toLocaleString("en-GB")} local · range ${c.cur}${z.lo.toLocaleString("en-GB")}-${c.cur}${z.hi.toLocaleString("en-GB")}</span></span></a>`;}).join('')}</div>`;
   const actions=document.getElementById('result-actions');actions.hidden=false;actions.dataset.rows=JSON.stringify(ranked);actions.dataset.concept=p.name;syncUrl();
+  if(pendingResultReveal){pendingResultReveal=false;requestAnimationFrame(()=>out.scrollIntoView({behavior:"smooth",block:"start"}));}
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function openScopeReport(){
@@ -160,5 +161,6 @@ document.getElementById('clear-area').onclick=()=>{drawPoly=null;scope.all=true;
 document.getElementById('share-results').onclick=async()=>{const u=stateUrl();try{await navigator.clipboard.writeText(u);document.getElementById('share-status').textContent='Link copied';}catch(e){prompt('Copy this result link',u);}};
 document.getElementById('pdf-results').onclick=openScopeReport;
 suppressUrl=true;hydrateUrl();suppressUrl=false;
+if(conceptId && location.hash==="#compare-app")pendingResultReveal=true;
 renderScope();renderMap();renderConcepts();loadResults();
 })();
