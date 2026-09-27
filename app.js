@@ -992,7 +992,7 @@ function fitTop20Once(){
 
 /* deep link: ?concept=<preset-id> preselects a concept (used by the rankings articles) */
 (function(){try{const q=new URLSearchParams(location.search);const cid=q.get("concept");if(cid&&PRESETS.some(p=>p.id===cid)){activePreset=cid;concept=normalizeConcept(JSON.parse(JSON.stringify(PRESETS.find(p=>p.id===cid))));}}catch(e){}})();
-$("seg-count").textContent=SEGS.length;
+if($("seg-count"))$("seg-count").textContent=SEGS.length;
   if($("preset-count"))$("preset-count").textContent=PRESETS.length;
 document.querySelectorAll("[data-built]").forEach(el=>el.textContent=META.built);
 renderPresets(); renderConcept(); renderMethod(); initMap(); renderMapControls(); update(); fitTop20Once();
