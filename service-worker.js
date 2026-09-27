@@ -1,10 +1,10 @@
 const BASE = self.registration.scope;
-const VERSION = "location-potential-europe-pwa-v6";
+const VERSION = "location-potential-europe-pwa-v7";
 const CORE = [
   BASE, BASE+"index.html", BASE+"manifest.webmanifest", BASE+"offline.html",
   BASE+"styles.css?v=46", BASE+"cities.js?v=11", BASE+"app.js?v=36",
-  BASE+"report.js?v=21", BASE+"extras.js?v=21",
-  BASE+"tabs.js?v=23", BASE+"leads.js?v=20",
+  BASE+"report.js?v=21", BASE+"extras.js?v=22",
+  BASE+"tabs.js?v=24", BASE+"leads.js?v=20",
   BASE+"assets/favicon.svg", BASE+"assets/icons/icon-192.png",
   BASE+"assets/icons/icon-512.png", BASE+"assets/icons/apple-touch-icon.png",
   BASE+"assets/icons/maskable-192.png", BASE+"assets/icons/maskable-512.png"
@@ -39,6 +39,17 @@ self.addEventListener("fetch", event => {
         })
         .catch(async () => (await caches.match(event.request)) || (await caches.match(BASE)) || caches.match(BASE+"offline.html"))
     );
+    return;
+  }
+
+  if (url.origin === self.location.origin && url.pathname.endsWith(".js")) {
+    event.respondWith(fetch(event.request).then(response => {
+      if (response.ok) {
+        const copy = response.clone();
+        caches.open(VERSION).then(cache => cache.put(event.request, copy));
+      }
+      return response;
+    }).catch(() => caches.match(event.request)));
     return;
   }
 
