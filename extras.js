@@ -22,16 +22,15 @@ function trendChange(series,years,back){
 function fmtChg(v){if(v==null)return "n/a";const s=v>=0?"+":"";return `<span class="chg ${v>=0?"up":"down"}">${s}${v.toFixed(0)}%</span>`;}
 function renderTrends(){
   const box=$("trend-list");if(!box)return;
-  // Concept-level search interest is a reference series, not city-level demand.
-  // The city's own OSM supply appears only when a measured snapshot exists.
-  const trendData=window.LPE_CONCEPT_TRENDS;
-  if(!trendData||!trendData.gt||!trendData.gt.series){box.innerHTML='<div class="saved-empty">Search-interest series is unavailable right now. The city scores and map remain available.</div>';return;}
-  const citySupply=(typeof TRENDS!=="undefined"&&TRENDS&&TRENDS.osm)?TRENDS.osm:null;
-  const years=(typeof TRENDS!=="undefined"&&TRENDS&&TRENDS.years)||[], gtyears=trendData.gt_years;
-
+  if(typeof TRENDS==="undefined"||!TRENDS||!TRENDS.gt||!TRENDS.gt.series||!TRENDS.gt_years?.length){
+    box.innerHTML='<div class="saved-empty"><b>No verified search-interest series for '+CITY.name+' yet.</b><p>We do not substitute another market’s trends or treat missing counts as zero. The Concept, map and Opportunity tools still use this city’s available published data.</p><a class="action" href="../#compare-app">Explore other markets</a></div>';
+    $("trend-pages")?.replaceChildren();
+    return;
+  }
+  const years=TRENDS.years, gtyears=TRENDS.gt_years;
   let rows=PRESETS.map(p=>{
-    const osm=citySupply?citySupply[p.cat]||null:null;
-    const gt=(trendData.gt&&trendData.gt.series)?trendData.gt.series[p.id]:null;
+    const osm=TRENDS.osm?TRENDS.osm[p.cat]||null:null;
+    const gt=(TRENDS.gt&&TRENDS.gt.series)?TRENDS.gt.series[p.id]:null;
     const gtMax=gt?Math.max(...Object.values(gt)):0;
     const lowVol=gt&&gtMax<3;
     return {p,osm,gt,gtChg:lowVol?null:trendChange(gt,gtyears,1),lowVol};
@@ -39,16 +38,16 @@ function renderTrends(){
   const q=trendQuery.trim().toLowerCase();
   if(q)rows=rows.filter(r=>r.p.name.toLowerCase().includes(q)
     ||(XCAT[r.p.cat]||"").toLowerCase().includes(q)
-    ||(((trendData.gt&&trendData.gt.kw&&trendData.gt.kw[r.p.id])||"").toLowerCase().includes(q)));
+    ||(((TRENDS.gt&&TRENDS.gt.kw&&TRENDS.gt.kw[r.p.id])||"").toLowerCase().includes(q)));
   if(trendSort==="growth")rows.sort((a,b)=>((b.gtChg??-999))-((a.gtChg??-999)));
   else rows.sort((a,b)=>a.p.name.localeCompare(b.p.name));
   const total=rows.length, pages=Math.max(1,Math.ceil(total/TREND_PAGE));
   if(trendPage>pages)trendPage=pages; if(trendPage<1)trendPage=1;
   const slice=rows.slice((trendPage-1)*TREND_PAGE, trendPage*TREND_PAGE);
   box.innerHTML=slice.map(r=>{
-    const kw=(trendData.gt&&trendData.gt.kw&&trendData.gt.kw[r.p.id])||r.p.name;
+    const kw=(TRENDS.gt&&TRENDS.gt.kw&&TRENDS.gt.kw[r.p.id])||r.p.name;
     const osmNow=r.osm && years.length && Number.isFinite(r.osm[years[years.length-1]]) ? Math.round(r.osm[years[years.length-1]]) : null;
-    const gtNums=r.gt?`index <b>${Math.round(r.gt[gtyears[0]])}</b> → <b>${Math.round(r.gt[gtyears[gtyears.length-1]])}</b> · Google Trends, ${trendData.gt.geo} - estimated attention; not a ${CITY.name} measurement`:"no search series";
+    const gtNums=r.gt?`index <b>${Math.round(r.gt[gtyears[0]])}</b> → <b>${Math.round(r.gt[gtyears[gtyears.length-1]])}</b> · Google Trends, ${TRENDS.gt.geo} - estimated attention`:"no search series";
     const gtState=r.lowVol?'<span class="tr-nodata">low search volume</span>':`${fmtChg(r.gtChg)} <span class="tr-per">1y</span>`;
     return `<div class="trend-card">
       <div class="tc-head"><div><b>${r.p.name}</b><span class="tr-cat">${XCAT[r.p.cat]||r.p.cat}</span></div><button class="mini tc-try" data-try="${r.p.id}">Try it →</button></div>
@@ -201,17 +200,12 @@ function runStress(){
 (function initExtras(){
   const ts=$("trend-sort");if(ts)ts.onchange=()=>{trendSort=ts.value;trendPage=1;renderTrends();};
   const tq=$("trend-search");if(tq)tq.oninput=()=>{trendQuery=tq.value;trendPage=1;renderTrends();};
-  const trendIntro=$("trends")?.querySelector(".trend-feature-head p");
-  if(trendIntro)trendIntro.textContent="Search interest for each concept uses a United Kingdom Google Trends reference series (2021-2026), not local demand in "+CITY.name+". A recorded venue-supply snapshot appears only when available for this city. Sort or search concepts to explore the reference series.";
-  const trendNote=$("trends")?.querySelector(".trend-note");
-  if(trendNote)trendNote.textContent="Reference only: the Google Trends series measures relative search interest for matching keywords in the United Kingdom, 2021-2026. It is not city-level demand or sales. A city-specific OpenStreetMap venue count is shown only when available; missing counts are omitted rather than treated as zero. The site's modelled city scores use their own evidence chain.";
   renderTrends();
-  if(!window.LPE_CONCEPT_TRENDS){
-    const reference=document.createElement("script");
-    reference.src=(window.LPE_BASE||"../")+"assets/concept-trends-reference.js?v=1";
-    reference.onload=renderTrends;
-    reference.onerror=()=>{const box=$("trend-list");if(box)box.innerHTML='<div class="saved-empty">Search-interest series is temporarily unavailable.</div>';};
-    document.head.appendChild(reference);
+  const trendIntro=$("trends")?.querySelector(".trend-feature-head p");
+  const trendNote=$("trends")?.querySelector(".trend-note");
+  if(typeof TRENDS==="undefined"||!TRENDS||!TRENDS.gt||!TRENDS.gt.series){
+    if(trendIntro)trendIntro.textContent="No verified search-interest series is available for "+CITY.name+". The rest of the city tools remain available.";
+    if(trendNote)trendNote.textContent="No other country's trend series is substituted for this city. Missing data is not zero.";
   }
   const gs=$("gap-seg");if(gs){gs.innerHTML=segOptions();$("gap-run").onclick=runGapFinder;}
   const is_=$("inv-seg");if(is_){is_.innerHTML=segOptions();$("inv-run").onclick=runInverse;}
