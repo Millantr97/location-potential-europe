@@ -22,7 +22,7 @@ function trendChange(series,years,back){
 function fmtChg(v){if(v==null)return "n/a";const s=v>=0?"+":"";return `<span class="chg ${v>=0?"up":"down"}">${s}${v.toFixed(0)}%</span>`;}
 function renderTrends(){
   const box=$("trend-list");if(!box)return;
-  if(typeof TRENDS==="undefined"||!TRENDS.osm){box.innerHTML='<div class="saved-empty">Trend series are being assembled from the sources below. Check back shortly.</div>';return;}
+  if(typeof TRENDS==="undefined"||!TRENDS||!TRENDS.osm){box.innerHTML='<div class="saved-empty">Trend series are being assembled from the sources below. Check back shortly.</div>';return;}
   const years=TRENDS.years, gtyears=TRENDS.gt_years;
   let rows=PRESETS.map(p=>{
     const osm=TRENDS.osm[p.cat]||null;
