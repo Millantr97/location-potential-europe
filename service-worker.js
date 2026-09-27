@@ -1,10 +1,10 @@
 const BASE = self.registration.scope;
-const VERSION = "location-potential-europe-pwa-v4";
+const VERSION = "location-potential-europe-pwa-v5";
 const CORE = [
   BASE, BASE+"index.html", BASE+"manifest.webmanifest", BASE+"offline.html",
-  BASE+"styles.css?v=45", BASE+"cities.js?v=11", BASE+"app.js?v=35",
+  BASE+"styles.css?v=46", BASE+"cities.js?v=11", BASE+"app.js?v=36",
   BASE+"report.js?v=21", BASE+"extras.js?v=21",
-  BASE+"tabs.js?v=22", BASE+"leads.js?v=20",
+  BASE+"tabs.js?v=23", BASE+"leads.js?v=20",
   BASE+"assets/favicon.svg", BASE+"assets/icons/icon-192.png",
   BASE+"assets/icons/icon-512.png", BASE+"assets/icons/apple-touch-icon.png",
   BASE+"assets/icons/maskable-192.png", BASE+"assets/icons/maskable-512.png"
