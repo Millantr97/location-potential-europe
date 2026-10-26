@@ -36,7 +36,11 @@ def main():
     if os.path.exists(idx):
         m=re.search(r'archive of week (\d{4}-W\d{2})',open(idx).read())
         tag=m.group(1) if m else 'previous'
-        os.replace(idx,os.path.join(outdir,'archive','%s.html'%tag))
+        # archive pages sit one directory deeper: re-root relative asset/page links
+        html=open(idx).read()
+        html=re.sub(r'(href|src)="\.\./',r'\1="../../',html).replace('href="archive/"','href="./"')
+        open(os.path.join(outdir,'archive','%s.html'%tag),'w').write(html)
+        os.remove(idx)
     days=seg['flow']['days'] if seg else {}
     maxd=max(days.values()) if days else 1
     bars=''.join('<rect x="%d" y="%d" width="52" height="%d" rx="4" fill="#16382c"/><text x="%d" y="176" font-size="13" text-anchor="middle" fill="#5c6b62">%s</text><text x="%d" y="%d" font-size="12" text-anchor="middle" fill="#5c6b62">%s</text>'
